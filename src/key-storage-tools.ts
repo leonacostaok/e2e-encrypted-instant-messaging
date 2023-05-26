@@ -1,17 +1,19 @@
-import util from 'util';
-import fs from 'fs';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
 import { createStore, KeysData } from 'key-store';
-import { createKeyPair, recoverKeyPair } from './encryption-tools';
 import settings from './settings';
-
-const readFile = util.promisify(fs.readFile);
-const writeFile = util.promisify(fs.writeFile);
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const HDNode = require('hdkey');
 
 export const createFileStore = async (filePath: string) => {
-  const saveKeys = (data: KeysData<never>) =>
-    writeFile(filePath, JSON.stringify(data), 'utf8');
+  const saveKeys = async (data: KeysData<never>): Promise<void> => {
+    writeFileSync(filePath, JSON.stringify(data));
+  };
 
-  const readKeys = async () => JSON.parse(await readFile(filePath, 'utf8'));
+  const readKeys = async () => {
+    return existsSync(filePath)
+      ? JSON.parse(readFileSync(filePath, 'utf8'))
+      : {};
+  };
 
   return createStore<{ xpriv: string; xpub: string }>(
     saveKeys,
@@ -24,7 +26,7 @@ export const initializeKey = async (
   seed: string,
   password: string,
 ) => {
-  const keyPair = createKeyPair(seed);
+  const keyPair = HDNode.fromMasterSeed(Buffer.from(seed, 'hex'));
   const fileStore = await createFileStore(settings.keyPath);
   await fileStore.saveKey(id, password, keyPair.toJSON());
   return keyPair;
@@ -33,5 +35,5 @@ export const initializeKey = async (
 export const recoverKey = async (id: string, password: string) => {
   const fileStore = await createFileStore(settings.keyPath);
   const keyPairInformation = fileStore.getPrivateKeyData(id, password);
-  return recoverKeyPair(keyPairInformation);
+  return HDNode.fromJSON(keyPairInformation);
 };
