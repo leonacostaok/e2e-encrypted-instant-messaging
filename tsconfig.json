@@ -6,7 +6,8 @@
 
     // Recommended: Compiler complains about expressions implicitly typed as 'any'
     "noImplicitAny": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
   },
   "include": ["src"], // which files to compile
   "exclude": ["node_modules"], // which files to skip

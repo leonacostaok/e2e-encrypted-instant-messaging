@@ -44,7 +44,12 @@
   "dependencies": {
     "@types/crypto-js": "^4.1.1",
     "@types/hdkey": "^2.0.1",
+    "@types/ws": "^8.5.4",
     "hdkey": "^2.1.0",
-    "key-store": "^1.2.0"
+    "jsonwebtoken": "^9.0.0",
+    "key-store": "^1.2.0",
+    "node-cache": "^5.1.2",
+    "serve-handler": "^6.1.5",
+    "uuid": "^9.0.0"
   }
 }
