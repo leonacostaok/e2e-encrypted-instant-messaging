@@ -2,20 +2,17 @@ import { createServer } from 'http';
 import staticHandler from 'serve-handler';
 import * as ws from 'ws';
 import { v4 } from 'uuid';
-import * as NodeCache from 'node-cache';
 import { MessageTypes } from './messages/message-types';
 import { BaseMessage, getMessage } from './messages/base.message';
 import { AuthMessage } from './messages/auth.message';
 import { challengeMessage } from './messages/challenge.message';
 import { errorMessage } from './messages/error.message';
 import * as crypto from 'crypto';
+import { hashMessage, Message } from './messages/message';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const HDNode = require('hdkey');
 
 const secret = v4();
-const cache = new NodeCache({
-  stdTTL: 600,
-});
 
 //serve static folder
 const server = createServer((req, res) => {
@@ -23,8 +20,7 @@ const server = createServer((req, res) => {
   return staticHandler(req, res, { public: 'public' });
 });
 
-const clientToUser = new Map<string, string>();
-const userToClient = new Map<string, string>();
+const publicKeyToClient = new Map<string, ws.WebSocket>();
 
 const wss = new ws.WebSocketServer({ server });
 
@@ -48,16 +44,44 @@ wss.on('connection', (client) => {
       return;
     }
 
-    if (message.type === MessageTypes.AUTH) {
-      const authMessage = getMessage<AuthMessage>(message.payload);
-      const verificationResult = HDNode.verify(
-        authMessage.publicKey + challenge,
-        authMessage.signature,
-      );
-      if (verificationResult) {
-        publicKey = authMessage.publicKey;
-      } else {
-        client.close();
+    switch (message.type) {
+      case MessageTypes.AUTH: {
+        const authMessage = getMessage<AuthMessage>(message.payload);
+        const verificationResult = HDNode.verify(
+          authMessage.publicKey + challenge,
+          authMessage.signature,
+        );
+        if (verificationResult) {
+          publicKey = authMessage.publicKey;
+          publicKeyToClient.set(publicKey, client);
+        } else {
+          client.close();
+        }
+        break;
+      }
+      case MessageTypes.MESSAGE: {
+        const normalMessage = getMessage<Message>(message.payload);
+
+        if (publicKey !== normalMessage.senderPublicKey) {
+          publicKeyToClient.delete(publicKey);
+          client.close();
+          break;
+        }
+        const verificationResult = HDNode.verify(
+          hashMessage(normalMessage),
+          normalMessage.signature,
+        );
+        if (verificationResult) {
+          // if client is connected, send message todo: check on channels, as they will have multiple recipients
+          const client = publicKeyToClient.get(
+            normalMessage.recipientPublicKey,
+          );
+          if (client) client.send(JSON.stringify(normalMessage));
+          // TODO save in database
+        } else {
+          client.close();
+        }
+        break;
       }
     }
   });

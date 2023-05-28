@@ -5,7 +5,9 @@ export interface ChallengeMessage {
   challenge: string;
 }
 
-export const challengeMessage = (challenge: string): BaseMessage => {
+export const challengeMessage = (
+  challenge: string,
+): BaseMessage<ChallengeMessage> => {
   return {
     type: MessageTypes.CHALLENGE,
     payload: { challenge },
