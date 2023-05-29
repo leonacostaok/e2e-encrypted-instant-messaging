@@ -47,8 +47,9 @@ wss.on('connection', (client) => {
     switch (message.type) {
       case MessageTypes.AUTH: {
         const authMessage = getMessage<AuthMessage>(message.payload);
-        const verificationResult = HDNode.verify(
-          authMessage.publicKey + challenge,
+        const HDKey = HDNode.fromExtendedKey(authMessage.publicKey);
+        const verificationResult = HDKey.verify(
+          challenge,
           authMessage.signature,
         );
         if (verificationResult) {
