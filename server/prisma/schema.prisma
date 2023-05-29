@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  publicKey   String   @unique
+  alias       String?  @unique
+  phoneNumber String   @unique
+  name        String?
+  status      String?
+  image       String?
+  createdAt   DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  updateAt    DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+
+  Messages      Message[]
+  Channels      UsersToChannels[] @relation("recipient")
+  AssignedUsers UsersToChannels[] @relation("assignedBy")
+
+  @@map("user")
+}
+
+model Channel {
+  id        Int      @id @default(autoincrement())
+  publicKey String   @unique
+  name      String?
+  status    String?
+  bio       String?
+  image     String?
+  createdAt DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  updateAt  DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+
+  Message         Message[]
+  UsersToChannels UsersToChannels[]
+
+  @@map("channel")
+}
+
+model UsersToChannels {
+  recipientId  Int
+  recipient    User     @relation("recipient", fields: [recipientId], references: [id])
+  channelId    Int
+  channel      Channel  @relation(fields: [channelId], references: [id])
+  assignedById Int
+  assignedBy   User     @relation("assignedBy", fields: [assignedById], references: [id], onDelete: Cascade)
+  addedAt      DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+
+  ReadReceipt ReadReceipt[]
+
+  @@id([recipientId, channelId])
+  @@map("users_to_channels")
+}
+
+model Message {
+  id               String   @id @db.Char(21)
+  senderId         Int
+  sender           User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId      Int
+  recipient        Channel  @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  encryptedMessage String
+  sentTime         DateTime
+  signature        String
+  createdAt        DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  updateAt         DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+
+  ReadReceipt ReadReceipt[]
+
+  @@map("message")
+}
+
+model ReadReceipt {
+  messageId   String          @db.Char(21)
+  message     Message         @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  recipientId Int
+  channelId   Int
+  recipient   UsersToChannels @relation(fields: [recipientId, channelId], references: [recipientId, channelId], onDelete: Cascade)
+  readAt      DateTime        @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+
+  @@id([recipientId, channelId, messageId])
+  @@map("read_receipt")
+}

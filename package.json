@@ -23,7 +23,9 @@
     "test:watch": "npm run jest -- --watch",
     "test": "npm run lint && npm run test:unit",
     "build": "tsc",
-    "prepublishOnly": "npm run test && npm run build"
+    "prepublishOnly": "npm run test && npm run build",
+    "prisma:generate": "npx prisma generate --schema=./server/prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate dev --preview-feature --schema=./server/prisma/schema.prisma"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
@@ -37,14 +39,17 @@
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^29.5.0",
     "prettier": "^2.8.8",
+    "prisma": "4.14.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@prisma/client": "4.14.1",
     "@types/crypto-js": "^4.1.1",
     "@types/hdkey": "^2.0.1",
     "@types/ws": "^8.5.4",
+    "dotenv": "^16.0.3",
     "hdkey": "^2.1.0",
     "jsonwebtoken": "^9.0.0",
     "key-store": "^1.2.0",
