@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { theme } from "./styles/global";
 import { useCookies } from "react-cookie";
@@ -14,6 +14,10 @@ function App() {
     setCookie('darkMode', !darkMode)
     setDarkMode(!darkMode)
   }
+
+  useEffect(() => {
+    console.log('keypair is changing to', keyPair);
+  }, [keyPair])
 
   return (
     <ThemeProvider theme={theme(darkMode)}>

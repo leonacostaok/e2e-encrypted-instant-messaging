@@ -1,14 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from 'styled-components'
 import { userProviderContext } from "../../providers/UserProvider";
 
 const Login = () => {
-  const { keyStoreExists } = useContext(userProviderContext)
+  const { keyStoreExists, setPassword } = useContext(userProviderContext)
+  const [loginPassword, setLoginPassword] = useState('');
+
+  const handleChange = (event: any) => {
+    setLoginPassword(event.target.value);
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    setPassword(loginPassword)
+  };
   return (
     <LoginWrapper>
-      <h2>{keyStoreExists ? 'Enter your password to decode existing chat history': 'Enter a password to create a new pair of keys'}</h2>
-      <Password type="password" />
-      <ButtonSubmit>Enter</ButtonSubmit>
+      <form onSubmit={handleSubmit}>
+        <h1>Login Form</h1>
+        <p>{keyStoreExists ? 'Enter your password to decode existing chat history': 'Enter a password to create a new pair of keys'}</p>
+        <Password type="password" onChange={handleChange} />
+        <ButtonSubmit type={"submit"}>Enter</ButtonSubmit>
+      </form>
     </LoginWrapper>
   )
 }
@@ -25,6 +38,13 @@ const LoginWrapper = styled.div`
   height: auto;
   border-radius: 10px;
   background: #e1fff3;
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
 `
 
 const Password = styled.input`

@@ -13,9 +13,7 @@ export function useKeyStore() {
     };
 
     const readKeys = async () => {
-      return cookie["key-store"]
-        ? JSON.parse(cookie["key-store"])
-        : {};
+      return cookie["key-store"] ?? {};
     };
 
     return createStore<{ xpriv: string; xpub: string }>(

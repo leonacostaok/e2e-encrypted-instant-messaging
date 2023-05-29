@@ -24,13 +24,19 @@ const UserProvider = ({ children }: { children: any }) => {
 
   useEffect(() =>{
     if (password !== '') {
-      recoverKey(settings.userKeyId, password).then((res) => {
-        setKeyPair(res)
-        setPassword('')
-      })
-      // todo check when we have to initialize it
+      if (keyStoreExists) {
+        recoverKey(settings.userKeyId, password).then((res) => {
+          setKeyPair(res);
+          setPassword('');
+        });
+      } else {
+        initializeKey(settings.userKeyId, 'changethis', password).then((res) => {
+          setKeyPair(res);
+          setPassword('');
+        });
+      }
     }
-  }, [password, recoverKey])
+  }, [password, setPassword])
 
   return (
     <userProviderContext.Provider value={{ setPassword, keyPair, keyStoreExists }}>
