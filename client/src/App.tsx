@@ -15,30 +15,24 @@ function App() {
     setDarkMode(!darkMode)
   }
 
-  useEffect(() => {
-    console.log('keypair is changing to', keyPair);
-  }, [keyPair])
-
   return (
     <ThemeProvider theme={theme(darkMode)}>
-      <UserProvider>
-        <AppContainer>
-          <ScreenContainer>
-            { keyPair ? (
-              <>
-                <ContactsSection>
-                  <p>Robert</p>
-                </ContactsSection>
-                <ChatSection>
-                  <p>Robert</p>
-                </ChatSection>
-              </>
-            ) : (
-              <Login />
-            )}
-          </ScreenContainer>
-        </AppContainer>
-      </UserProvider>
+      <AppContainer>
+        <ScreenContainer>
+          { keyPair ? (
+            <>
+              <ContactsSection>
+                <p>Robert</p>
+              </ContactsSection>
+              <ChatSection>
+                <p>Robert</p>
+              </ChatSection>
+            </>
+          ) : (
+            <Login />
+          )}
+        </ScreenContainer>
+      </AppContainer>
     </ThemeProvider>
   );
 }

@@ -24,17 +24,17 @@ const UserProvider = ({ children }: { children: any }) => {
 
   useEffect(() =>{
     if (password !== '') {
-      if (keyStoreExists) {
-        recoverKey(settings.userKeyId, password).then((res) => {
-          setKeyPair(res);
+      ;(async () => {
+        if (keyStoreExists) {
+          const keyPair = await recoverKey(settings.userKeyId, password)
+          setKeyPair(keyPair);
           setPassword('');
-        });
-      } else {
-        initializeKey(settings.userKeyId, 'changethis', password).then((res) => {
-          setKeyPair(res);
+        } else {
+          const keyPair = await initializeKey(settings.userKeyId, 'changethis', password)
+          setKeyPair(keyPair);
           setPassword('');
-        });
-      }
+        }
+      })()
     }
   }, [password, setPassword])
 

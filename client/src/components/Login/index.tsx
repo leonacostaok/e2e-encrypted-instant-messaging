@@ -17,7 +17,7 @@ const Login = () => {
   return (
     <LoginWrapper>
       <form onSubmit={handleSubmit}>
-        <h1>Login Form</h1>
+        <h1>Login</h1>
         <p>{keyStoreExists ? 'Enter your password to decode existing chat history': 'Enter a password to create a new pair of keys'}</p>
         <Password type="password" onChange={handleChange} />
         <ButtonSubmit type={"submit"}>Enter</ButtonSubmit>
@@ -44,6 +44,10 @@ const LoginWrapper = styled.div`
     align-items: center;
     justify-content: center;
     gap: 10px;
+    p {
+      text-align: center;
+      padding: 0 15%;
+    }
   }
 `
 
