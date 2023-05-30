@@ -1,45 +1,118 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { useKeyStore } from "../hooks/useKeyStore";
 import { settings } from "../constants/settings";
 import HDNode from "hdkey";
+import * as bip39 from "bip39";
+import { useCookies } from "react-cookie";
 
 export interface UserState {
-  keyStoreExists: boolean
-  keyPair: HDNode | undefined
-  setPassword: (password: string) => void
+  keyStoreExists: boolean;
+  keyPair: HDNode | undefined;
+  isBackupConfirmed: boolean;
+  loginWithPassword: (password: string) => Promise<{ result: boolean, mnemonic?: string }>;
+  loginWithMnemonicAndPassword: (
+    mnemonic: string,
+    password: string,
+  ) => Promise<boolean>;
+  error: string | undefined;
+  resetError: () => void;
+  confirmBackup: () => void;
 }
 
 export const userProviderContext = createContext<UserState>({
-  setPassword: (password: string) => {
+  isBackupConfirmed: false,
+  loginWithPassword: async (password: string) => {
+    return { result: false };
+  },
+  loginWithMnemonicAndPassword: async (mnemonic: string, password: string) => {
+    return false;
+  },
+  resetError: () => {
+    return;
+  },
+  confirmBackup: () => {
     return;
   },
   keyPair: undefined,
-  keyStoreExists: false
+  keyStoreExists: false,
+  error: undefined
 })
 
 const UserProvider = ({ children }: { children: any }) => {
-  const [password, setPassword] = useState('')
+  const [cookie, setCookie] = useCookies(['backupConfirmed'])
+  const [error, setError] = useState<string | undefined>(undefined)
   const [keyPair, setKeyPair] = useState<HDNode | undefined>(undefined)
-  const {initializeKey, recoverKey, keyStoreExists} = useKeyStore()
+  const {initializeKey, decryptKey, keyStoreExists, recoverKey} = useKeyStore()
+  const [isBackupConfirmed, setIsBackupConfirmed] = useState(false)
 
-  useEffect(() =>{
+  const loginWithPassword = async (password: string) => {
     if (password !== '') {
-      ;(async () => {
-        if (keyStoreExists) {
-          const keyPair = await recoverKey(settings.userKeyId, password)
-          setKeyPair(keyPair);
-          setPassword('');
-        } else {
-          const keyPair = await initializeKey(settings.userKeyId, 'changethis', password)
-          setKeyPair(keyPair);
-          setPassword('');
+      if (keyStoreExists) {
+        try {
+          const { hdKey, mnemonic } = await decryptKey(settings.userKeyId, password);
+          setKeyPair(hdKey);
+          setIsBackupConfirmed(cookie.backupConfirmed);
+          return { result: true, mnemonic };
+        } catch (e: any) {
+          setError(e.message + (e.message.includes('Decryption failed.') ? ' Try with a different password.' : ''))
         }
-      })()
+      } else {
+        const { keyPair, mnemonic } = await initializeKey(
+          settings.userKeyId,
+          password,
+        );
+        setKeyPair(keyPair);
+        setIsBackupConfirmed(false);
+        setCookie('backupConfirmed', false)
+        return { result: true, mnemonic };
+      }
+    } else {
+      setError('Password must be filled up.')
     }
-  }, [password, setPassword])
+    return { result: false };
+  }
+
+  const loginWithMnemonicAndPassword = async (mnemonic: string, password: string) => {
+    if (mnemonic !== '' && password !== '') {
+      if (bip39.validateMnemonic(mnemonic)) {
+        try {
+          const keyPair = await recoverKey(settings.userKeyId, mnemonic, password)
+          setKeyPair(keyPair);
+          setIsBackupConfirmed(true);
+          setCookie('backupConfirmed', true)
+          return true;
+        } catch (e: any) {
+          setError(e.message)
+        }
+      } else {
+        setError('Mnemonic not valid, please check if the 12 words coincide with your backup.')
+      }
+    } else {
+      setError('Both mnemonic and password must have values.')
+    }
+    return false;
+  }
+
+  const resetError = () => {
+    setError('')
+  }
+
+  const confirmBackup = () => {
+    setCookie('backupConfirmed', true)
+    setIsBackupConfirmed(true)
+  }
 
   return (
-    <userProviderContext.Provider value={{ setPassword, keyPair, keyStoreExists }}>
+    <userProviderContext.Provider value={{
+      isBackupConfirmed,
+      confirmBackup,
+      error,
+      loginWithPassword,
+      keyPair,
+      keyStoreExists,
+      loginWithMnemonicAndPassword,
+      resetError
+    }}>
       {children}
     </userProviderContext.Provider>
   )

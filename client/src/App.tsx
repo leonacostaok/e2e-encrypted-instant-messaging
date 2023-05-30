@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { theme } from "./styles/global";
 import { useCookies } from "react-cookie";
-import UserProvider, { userProviderContext } from "./providers/UserProvider";
+import { userProviderContext } from "./providers/UserProvider";
 import Login from "./components/Login";
 
 function App() {
   const [cookie, setCookie] = useCookies(['darkMode'])
   const [darkMode, setDarkMode] = useState(Boolean(cookie.darkMode))
-  const { keyPair } = useContext(userProviderContext)
+  const { keyPair, isBackupConfirmed } = useContext(userProviderContext)
 
   const changeTheme = () => {
     setCookie('darkMode', !darkMode)
@@ -19,7 +19,7 @@ function App() {
     <ThemeProvider theme={theme(darkMode)}>
       <AppContainer>
         <ScreenContainer>
-          { keyPair ? (
+          { keyPair && isBackupConfirmed ? (
             <>
               <ContactsSection>
                 <p>Robert</p>
@@ -46,7 +46,7 @@ const AppContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #e1fff3;
+  background: ${({ theme }) => theme.colors.aquamarine};
 `
 
 const ScreenContainer = styled.div`
@@ -60,19 +60,19 @@ const ScreenContainer = styled.div`
   padding: 20px;
   gap: 20px;
   border-radius: 10px;
-  background: white;
+  background: ${({ theme }) => theme.colors.white};
 `
 
 const ContactsSection = styled.div`
   width: 300px;
   height: 100%;
   border-radius: 10px;
-  background: #e1fff3;
+  background: ${({ theme }) => theme.colors.aquamarine};
 `
 
 const ChatSection = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  background: #e1fff3;
+  background: ${({ theme }) => theme.colors.aquamarine};
 `

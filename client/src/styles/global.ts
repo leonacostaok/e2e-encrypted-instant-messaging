@@ -22,6 +22,11 @@ const colors = (darkMode: boolean) => {
   // base
   white: '#FFFFFF',
   black: '#000000',
+
+  // colors
+  aquamarine: '#e1fff3',
+  darkGreen: '#009359',
+  lightGreen: '#00ff9a',
  }
 }
 
