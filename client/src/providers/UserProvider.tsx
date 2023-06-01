@@ -3,7 +3,6 @@ import { useKeyStore } from "../hooks/useKeyStore";
 import { settings } from "../constants/settings";
 import HDNode from "hdkey";
 import * as bip39 from "bip39";
-import { useCookies } from "react-cookie";
 
 export interface UserState {
   keyStoreExists: boolean;
@@ -39,7 +38,6 @@ export const userProviderContext = createContext<UserState>({
 })
 
 const UserProvider = ({ children }: { children: any }) => {
-  const [cookie, setCookie] = useCookies(['backupConfirmed'])
   const [error, setError] = useState<string | undefined>(undefined)
   const [keyPair, setKeyPair] = useState<HDNode | undefined>(undefined)
   const {initializeKey, decryptKey, keyStoreExists, recoverKey} = useKeyStore()
@@ -51,7 +49,7 @@ const UserProvider = ({ children }: { children: any }) => {
         try {
           const { hdKey, mnemonic } = await decryptKey(settings.userKeyId, password);
           setKeyPair(hdKey);
-          setIsBackupConfirmed(cookie.backupConfirmed);
+          setIsBackupConfirmed(Boolean(localStorage.getItem("backupConfirmed")));
           return { result: true, mnemonic };
         } catch (e: any) {
           setError(e.message + (e.message.includes('Decryption failed.') ? ' Try with a different password.' : ''))
@@ -63,7 +61,7 @@ const UserProvider = ({ children }: { children: any }) => {
         );
         setKeyPair(keyPair);
         setIsBackupConfirmed(false);
-        setCookie('backupConfirmed', false)
+        localStorage.setItem('backupConfirmed', 'false')
         return { result: true, mnemonic };
       }
     } else {
@@ -79,7 +77,7 @@ const UserProvider = ({ children }: { children: any }) => {
           const keyPair = await recoverKey(settings.userKeyId, mnemonic, password)
           setKeyPair(keyPair);
           setIsBackupConfirmed(true);
-          setCookie('backupConfirmed', true)
+          localStorage.setItem('backupConfirmed', 'true')
           return true;
         } catch (e: any) {
           setError(e.message)
@@ -98,7 +96,7 @@ const UserProvider = ({ children }: { children: any }) => {
   }
 
   const confirmBackup = () => {
-    setCookie('backupConfirmed', true)
+    localStorage.setItem('backupConfirmed', 'true')
     setIsBackupConfirmed(true)
   }
 

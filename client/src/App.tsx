@@ -1,18 +1,16 @@
 import React, { useContext, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { theme } from "./styles/global";
-import { useCookies } from "react-cookie";
 import { userProviderContext } from "./providers/UserProvider";
 import Login from "./components/Login";
 import Chat from "./components/Chat";
 
 function App() {
-  const [cookie, setCookie] = useCookies(['darkMode'])
-  const [darkMode, setDarkMode] = useState(Boolean(cookie.darkMode))
+  const [darkMode, setDarkMode] = useState(Boolean(localStorage.getItem('darkMode')))
   const { keyPair, isBackupConfirmed } = useContext(userProviderContext)
 
   const changeTheme = () => {
-    setCookie('darkMode', !darkMode)
+    localStorage.setItem('darkMode', darkMode ? 'false' : 'true')
     setDarkMode(!darkMode)
   }
 

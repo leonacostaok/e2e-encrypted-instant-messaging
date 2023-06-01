@@ -137,3 +137,22 @@ setInterval(() => {
     });
   });
 }, 10000);
+
+// const createCategory = await prisma.post.create({
+//   data: {
+//     title: 'How to be Bob',
+//     categories: {
+//       create: [
+//         {
+//           assignedBy: 'Bob',
+//           assignedAt: new Date(),
+//           category: {
+//             create: {
+//               name: 'New category',
+//             },
+//           },
+//         },
+//       ],
+//     },
+//   },
+// })

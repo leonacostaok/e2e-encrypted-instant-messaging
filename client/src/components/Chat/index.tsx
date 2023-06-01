@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from 'styled-components'
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { userProviderContext } from "../../providers/UserProvider";
@@ -12,11 +12,6 @@ const Chat = () => {
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(process.env.SERVER_URL ?? 'ws://localhost:9876');
 
-  // useEffect(() => {
-  //   keyPair?.sign()
-  //   sendMessage(authMessage(keyPair?.publicExtendedKey))
-  // }, [])
-
   useEffect(() => {
     if (lastMessage !== null && keyPair) {
       setMessageHistory((prev) => prev.concat(lastMessage));
@@ -28,10 +23,6 @@ const Chat = () => {
       }
     }
   }, [lastMessage, setMessageHistory]);
-
-  const handleClickSendMessage = useCallback(() => {
-    sendMessage('hello');
-  }, []);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -48,14 +39,12 @@ const Chat = () => {
       </ContactsSection>
       <ChatSection>
         <div>
-          <button
-            onClick={handleClickSendMessage}
-            disabled={readyState !== ReadyState.OPEN}
-          >
-            Click Me to send 'Hello'
-          </button>
           <span>The WebSocket is currently {connectionStatus}</span>
+          <h3>Last Message</h3>
           {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
+          <br />
+          <br />
+          <h3>Message History</h3>
           <ul>
             {messageHistory.map((message, idx) => (
               <span key={idx}>{message ? message.data : null}</span>
