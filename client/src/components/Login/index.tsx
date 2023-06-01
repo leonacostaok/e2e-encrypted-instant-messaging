@@ -70,7 +70,7 @@ const Login = () => {
               ? 'Enter your password to decode existing chat history'
               : 'Enter a password to create a new pair of keys'}
           </p>
-          <Password placeholder='Password...' type="password" onChange={handleChange} />
+          <Password autoComplete="off" placeholder='Password...' type="password" onChange={handleChange} />
           <ButtonSubmit type={'submit'}>Login</ButtonSubmit>
           <p>
             Or{' '}
@@ -94,8 +94,8 @@ const Login = () => {
             Enter your 12 mnemonic words to recover your access and chat
             history.
           </p>
-          <MnemonicInput placeholder='Mnemonic...' type="text" onChange={handleMnemonicChange} />
-          <Password placeholder='Password...' type="password" onChange={handleChange} />
+          <MnemonicInput autoComplete="off" placeholder='Mnemonic...' type="text" onChange={handleMnemonicChange} />
+          <Password autoComplete="off" placeholder='Password...' type="password" onChange={handleChange} />
           <ButtonSubmit type={'submit'}>Recover</ButtonSubmit>
           <p>
             <span
@@ -113,14 +113,14 @@ const Login = () => {
         <form onSubmit={handleContinueToConfirmation}>
           <h1>Back-up your mnemonic</h1>
           <p>Please make sure you back up your mnemonic key so you can recover your account in the future.</p>
-          <MnemonicInput id={'show-mnemonic'} value={loginMnemonic} type="text" readOnly={true} />
+          <MnemonicInput autoComplete="off" id={'show-mnemonic'} value={loginMnemonic} type="text" readOnly={true} />
           <ButtonSubmit>Continue</ButtonSubmit>
         </form>
       ) : loginScreen === LoginScreen.CONFIRM_MNEMONIC && (
         <form onSubmit={handleConfirmMnemonic}>
           <h1>Confirm your mnemonic</h1>
           <p>Enter the 12 words you backed up to confirm your mnemonic.</p>
-          <MnemonicInput id={'confirm-mnemonic'} type="text" defaultValue="" value={confirmMnemonic} onChange={handleConfirmMnemonicChange} />
+          <MnemonicInput autoComplete="off" id={'confirm-mnemonic'} type="text" defaultValue="" value={confirmMnemonic} onChange={handleConfirmMnemonicChange} />
           <ButtonSubmit>Confirm</ButtonSubmit>
           <p>
             <span onClick={() => setLoginScreen(LoginScreen.SHOW_MNEMONIC)}>

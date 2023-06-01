@@ -1,6 +1,3 @@
-import { createServer } from 'http';
-import staticHandler from 'serve-handler';
-import * as ws from 'ws';
 import { v4 } from 'uuid';
 import { MessageTypes } from './messages/message-types';
 import { BaseMessage, getMessage } from './messages/base.message';
@@ -9,22 +6,37 @@ import { challengeMessage } from './messages/challenge.message';
 import { errorMessage } from './messages/error.message';
 import * as crypto from 'crypto';
 import { hashMessage, Message } from './messages/message';
+import { PrismaClient } from '@prisma/client';
+import { generateAuthToken } from './utils/auth.utils';
+import { authSuccessMessage } from './messages/auth-success.message';
+const express = require('express');
+const ws = require('ws');
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const HDNode = require('hdkey');
 
+const prisma = new PrismaClient();
+
 const secret = v4();
 
+const app = express();
 //serve static folder
-const server = createServer((req, res) => {
-  // (1)
-  return staticHandler(req, res, { public: 'public' });
+const wss = new ws.Server({ noServer: true });
+
+// `server` is a vanilla Node.js HTTP server, so use
+// the same ws upgrade process described here:
+// https://www.npmjs.com/package/ws#multiple-servers-sharing-a-single-https-server
+const server = app.listen(process.env.PORT ?? 9876, () => {
+  console.log(`server listening...`);
 });
+server.on('upgrade', (request: any, socket: any, head: any) => {
+  wss.handleUpgrade(request, socket, head, (socket: any) => {
+    wss.emit('connection', socket, request);
+  });
+});
+const publicKeyToClient = new Map<string, any>();
 
-const publicKeyToClient = new Map<string, ws.WebSocket>();
-
-const wss = new ws.WebSocketServer({ server });
-
-wss.on('connection', (client) => {
+wss.on('connection', (client: any) => {
   const uniqueID = v4();
   let publicKey: string;
 
@@ -33,13 +45,13 @@ wss.on('connection', (client) => {
     .update(uniqueID)
     .digest('hex');
 
-  client.on('message', (jsonString) => {
+  client.on('message', (jsonString: any) => {
     let message: BaseMessage<object>;
 
     try {
-      message = JSON.parse(jsonString.toString());
+      message = JSON.parse(jsonString);
     } catch (e) {
-      sendError(ws, 'Wrong format', 404);
+      sendError(client, 'Wrong format', 404);
 
       return;
     }
@@ -49,12 +61,32 @@ wss.on('connection', (client) => {
         const authMessage = getMessage<AuthMessage>(message.payload);
         const HDKey = HDNode.fromExtendedKey(authMessage.publicKey);
         const verificationResult = HDKey.verify(
-          challenge,
-          authMessage.signature,
+          Buffer.from(challenge, 'hex'),
+          (authMessage.signature as any).data as Uint8Array,
         );
         if (verificationResult) {
           publicKey = authMessage.publicKey;
           publicKeyToClient.set(publicKey, client);
+          prisma.user.findFirst({ where: { publicKey } }).then((user) => {
+            const { jwtToken, expTime } = generateAuthToken(uniqueID);
+            if (user) {
+              client.send(
+                JSON.stringify(authSuccessMessage(user, jwtToken, expTime)),
+              );
+            } else {
+              prisma.user
+                .create({
+                  data: {
+                    publicKey,
+                  },
+                })
+                .then((user) => {
+                  client.send(
+                    JSON.stringify(authSuccessMessage(user, jwtToken, expTime)),
+                  );
+                });
+            }
+          });
         } else {
           client.close();
         }
@@ -87,20 +119,20 @@ wss.on('connection', (client) => {
     }
   });
 
+  client.on('close', () => {
+    publicKeyToClient.delete('publicKey');
+  });
+
   client.send(JSON.stringify(challengeMessage(challenge)));
 });
 
-server.listen(process.env.PORT ?? 9876, () => {
-  console.log(`server listening...`);
-});
-
-const sendError = (ws, message, code) => {
+const sendError = (ws: any, message: string, code: number) => {
   ws.send(JSON.stringify(errorMessage(message, code)));
 };
 
 setInterval(() => {
-  wss.clients.forEach((ws) => {
-    ws.ping(null, false, (err) => {
+  wss.clients.forEach((ws: any) => {
+    ws.ping(null, false, (err: any) => {
       if (err) ws.terminate();
     });
   });

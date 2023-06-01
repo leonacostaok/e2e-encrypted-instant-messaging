@@ -11,7 +11,7 @@ model User {
   id          Int      @id @default(autoincrement())
   publicKey   String   @unique
   alias       String?  @unique
-  phoneNumber String   @unique
+  phoneNumber String?  @unique
   name        String?
   status      String?
   image       String?

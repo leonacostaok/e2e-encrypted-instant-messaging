@@ -3,6 +3,7 @@ import { MessageTypes } from './message-types';
 export interface BaseMessage<T> {
   type: MessageTypes;
   payload: T;
+  authToken?: string;
 }
 
 export const getMessage = <T>(payload: object): T => {
