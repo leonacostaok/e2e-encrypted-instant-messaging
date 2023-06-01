@@ -40,7 +40,7 @@ export const userProviderContext = createContext<UserState>({
 const UserProvider = ({ children }: { children: any }) => {
   const [error, setError] = useState<string | undefined>(undefined)
   const [keyPair, setKeyPair] = useState<HDNode | undefined>(undefined)
-  const {initializeKey, decryptKey, keyStoreExists, recoverKey} = useKeyStore()
+  const {initializeKey, decryptKey, keyStoreExists} = useKeyStore()
   const [isBackupConfirmed, setIsBackupConfirmed] = useState(false)
 
   const loginWithPassword = async (password: string) => {
@@ -74,7 +74,11 @@ const UserProvider = ({ children }: { children: any }) => {
     if (mnemonic !== '' && password !== '') {
       if (bip39.validateMnemonic(mnemonic)) {
         try {
-          const keyPair = await recoverKey(settings.userKeyId, mnemonic, password)
+          const { keyPair } = await initializeKey(
+            settings.userKeyId,
+            password,
+            mnemonic,
+          );
           setKeyPair(keyPair);
           setIsBackupConfirmed(true);
           localStorage.setItem('backupConfirmed', 'true')

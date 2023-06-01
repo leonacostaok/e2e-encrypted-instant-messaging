@@ -24,8 +24,9 @@ export function useKeyStore() {
   const initializeKey = async (
     id: string,
     password: string,
+    mnemonic?: string
   ) => {
-    const mnemonic = await bip39.generateMnemonic(128);
+    if (!mnemonic) mnemonic = await bip39.generateMnemonic(128);
     const keyPair = HDNode.fromMasterSeed(await bip39.mnemonicToSeed(mnemonic));
     const fileStore = await createFileStore();
     await fileStore.saveKey(id, password, keyPair.toJSON());
@@ -40,15 +41,7 @@ export function useKeyStore() {
     return { hdKey: HDNode.fromJSON(keyPairInformation), mnemonic: mnemonicInformation };
   };
 
-  const recoverKey = async (id: string, mnemonic: string, password: string) => {
-    const keyPair = HDNode.fromMasterSeed(await bip39.mnemonicToSeed(mnemonic));
-    const fileStore = await createFileStore();
-    await fileStore.saveKey(id, password, keyPair.toJSON());
-    localStorage.setItem('mnemonic', AES.encrypt(mnemonic, keyPair.publicExtendedKey).toString())
-    return keyPair;
-  };
-
   const keyStoreExists = useMemo(() => !!keyStore, [keyStore])
 
-  return { initializeKey, decryptKey, keyStoreExists, recoverKey }
+  return { initializeKey, decryptKey, keyStoreExists }
 }
