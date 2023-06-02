@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from 'styled-components'
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import { userProviderContext } from "../../providers/UserProvider";
 import { authMessage } from "../../messages/auth.message";
 import { MessageTypes } from "../../constants/message-types";
 import { ChallengeMessage } from "../../../../server/messages/challenge.message";
+import NavBar from "../NavBar";
 
 const Chat = () => {
   const { keyPair } = useContext(userProviderContext)
@@ -24,22 +25,14 @@ const Chat = () => {
     }
   }, [lastMessage, setMessageHistory]);
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
-
   return (
-    <>
-      <ContactsSection>
-        <p>Robert</p>
-      </ContactsSection>
-      <ChatSection>
-        <div>
-          <span>The WebSocket is currently {connectionStatus}</span>
+    <ChatContainer>
+      <NavBar readyState={readyState} />
+      <ChatContent>
+        <ContactsSection>
+          <p>Robert</p>
+        </ContactsSection>
+        <ChatSection>
           <h3>Last Message</h3>
           {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
           <br />
@@ -50,24 +43,56 @@ const Chat = () => {
               <span key={idx}>{message ? message.data : null}</span>
             ))}
           </ul>
-        </div>
-      </ChatSection>
-    </>
+        </ChatSection>
+      </ChatContent>
+    </ChatContainer>
   )
 }
 
 export default Chat
 
+const ChatContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 20px;
+`
+
+const ChatContent = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  height: 100%;
+  width: 100%;
+`
+
 const ContactsSection = styled.div`
   width: 300px;
-  height: 100%;
+  height: calc(90vh - 110px);
   border-radius: 10px;
   background: ${({ theme }) => theme.colors.aquamarine};
 `
 
 const ChatSection = styled.div`
-  width: 100%;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: calc(100% - 300px);
+  height: calc(90vh - 110px);
   border-radius: 10px;
   background: ${({ theme }) => theme.colors.aquamarine};
+  padding: 20px;
+  ul {
+    height: auto;
+    width: 100%;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    span {
+      width: 100%;
+      word-wrap:break-word;
+    }
+  }
 `

@@ -7,22 +7,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          Int      @id @default(autoincrement())
-  publicKey   String   @unique
-  alias       String?  @unique
-  phoneNumber String?  @unique
-  name        String?
-  status      String?
-  image       String?
-  createdAt   DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
-  updateAt    DateTime @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+enum ShareType {
+  NONE
+  CONTACTS
+  EVERYONE
+}
 
+enum ContactStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+model User {
+  id              Int              @id @default(autoincrement())
+  publicKey       String           @unique
+  alias           String?          @unique
+  phoneNumber     String?          @unique
+  name            String?
+  emoji           String?
+  status          String?
+  image           String?
+  privacySettings PrivacySettings?
+  createdAt       DateTime         @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  updateAt        DateTime         @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+
+  Contacts      Contact[]         @relation("contacts")
+  ContactAddred Contact[]         @relation("contact_added")
   Messages      Message[]
   Channels      UsersToChannels[] @relation("recipient")
   AssignedUsers UsersToChannels[] @relation("assignedBy")
 
   @@map("user")
+}
+
+model PrivacySettings {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phoneSearch Boolean   @default(true)
+  aliasSearch Boolean   @default(true)
+  phoneShare  ShareType @default(CONTACTS)
+  emojiShare  ShareType @default(CONTACTS)
+  nameShare   ShareType @default(CONTACTS)
+  imageShare  ShareType @default(CONTACTS)
+  statusShare ShareType @default(CONTACTS)
+
+  @@map("privacy_settings")
+}
+
+model Contact {
+  id        Int           @id @default(autoincrement())
+  userId    Int           @unique
+  user      User          @relation("contacts", fields: [userId], references: [id], onDelete: Cascade)
+  contactId Int           @unique
+  contact   User          @relation("contact_added", fields: [contactId], references: [id], onDelete: Cascade)
+  status    ContactStatus @default(PENDING)
+  createdAt DateTime      @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+  updateAt  DateTime      @default(dbgenerated("timezone('UTC'::text, now())")) @db.Timestamp(6)
+
+  @@map("contacts")
 }
 
 model Channel {
