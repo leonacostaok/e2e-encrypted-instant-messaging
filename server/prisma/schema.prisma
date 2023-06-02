@@ -43,16 +43,17 @@ model User {
 }
 
 model PrivacySettings {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  phoneSearch Boolean   @default(true)
-  aliasSearch Boolean   @default(true)
-  phoneShare  ShareType @default(CONTACTS)
-  emojiShare  ShareType @default(CONTACTS)
-  nameShare   ShareType @default(CONTACTS)
-  imageShare  ShareType @default(CONTACTS)
-  statusShare ShareType @default(CONTACTS)
+  id                 Int       @id @default(autoincrement())
+  userId             Int       @unique
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  autoAcceptContacts Boolean   @default(true)
+  phoneSearch        Boolean   @default(true)
+  aliasSearch        Boolean   @default(true)
+  phoneShare         ShareType @default(CONTACTS)
+  emojiShare         ShareType @default(CONTACTS)
+  nameShare          ShareType @default(CONTACTS)
+  imageShare         ShareType @default(CONTACTS)
+  statusShare        ShareType @default(CONTACTS)
 
   @@map("privacy_settings")
 }

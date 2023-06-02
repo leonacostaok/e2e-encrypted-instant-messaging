@@ -4,6 +4,7 @@ import { theme } from "./styles/global";
 import { userProviderContext } from "./providers/UserProvider";
 import Login from "./components/Login";
 import Chat from "./components/Chat";
+import Footer from "./components/Footer";
 
 function App() {
   const [darkMode, setDarkMode] = useState(Boolean(localStorage.getItem('darkMode')))
@@ -20,6 +21,7 @@ function App() {
         <ScreenContainer>
           { keyPair && isBackupConfirmed ? <Chat /> : <Login /> }
         </ScreenContainer>
+        <Footer />
       </AppContainer>
     </ThemeProvider>
   );
@@ -33,13 +35,14 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background: ${({ theme }) => theme.colors.aquamarine};
+  padding-top: 20px;
 `
 
 const ScreenContainer = styled.div`
   width: 95%;
-  height: 95%;
+  height: calc(95% - 30px);
   max-width: 1200px;
   display: flex;
   flex-direction: row;

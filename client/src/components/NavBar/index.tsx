@@ -1,11 +1,14 @@
 import React from "react";
 import styled from 'styled-components'
 import { ReadyState } from "react-use-websocket";
+import { User } from "../../entities/User";
+import UserCard from "../UserCard";
 
 interface NavBarProps {
   readyState: ReadyState
+  user?: User
 }
-const NavBar = ({readyState}: NavBarProps) => {
+const NavBar = ({user, readyState}: NavBarProps) => {
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -17,7 +20,7 @@ const NavBar = ({readyState}: NavBarProps) => {
 
   return (
     <NavBarContainer>
-      <p>Robert</p>
+      <UserCard user={user} />
       <span>The WebSocket is currently {connectionStatus}</span>
     </NavBarContainer>
   )

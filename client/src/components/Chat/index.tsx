@@ -4,11 +4,15 @@ import useWebSocket from "react-use-websocket";
 import { userProviderContext } from "../../providers/UserProvider";
 import { authMessage } from "../../messages/auth.message";
 import { MessageTypes } from "../../constants/message-types";
-import { ChallengeMessage } from "../../../../server/messages/challenge.message";
+import { ChallengeMessage } from "../../messages/challenge.message";
 import NavBar from "../NavBar";
+import { AuthSuccessMessage } from "../../messages/auth-success.message";
+import { getMessage } from "../../messages/base.message";
+import { User } from "../../entities/User";
 
 const Chat = () => {
   const { keyPair } = useContext(userProviderContext)
+  const [user, setUser] = useState<User>()
   const [messageHistory, setMessageHistory] = useState<WebSocketEventMap['message'][]>([]);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(process.env.SERVER_URL ?? 'ws://localhost:9876');
@@ -17,17 +21,24 @@ const Chat = () => {
     if (lastMessage !== null && keyPair) {
       setMessageHistory((prev) => prev.concat(lastMessage));
       const message = JSON.parse(lastMessage.data)
-      if (message.type === MessageTypes.CHALLENGE) {
-        const parsedMessage = message.payload as ChallengeMessage
-        const signature = keyPair?.sign(Buffer.from(parsedMessage.challenge, "hex"))
-        sendMessage(JSON.stringify(authMessage(keyPair?.publicExtendedKey, signature)))
+      let parsedMessage
+      switch (message.type) {
+        case MessageTypes.CHALLENGE:
+          parsedMessage = getMessage<ChallengeMessage>(message)
+          const signature = keyPair?.sign(Buffer.from(parsedMessage.challenge, "hex"))
+          sendMessage(JSON.stringify(authMessage(keyPair?.publicExtendedKey, signature)))
+          break
+        case MessageTypes.AUTH_SUCCESS:
+          parsedMessage = getMessage<AuthSuccessMessage>(message)
+          setUser(parsedMessage.user)
+          break
       }
     }
   }, [lastMessage, setMessageHistory]);
 
   return (
     <ChatContainer>
-      <NavBar readyState={readyState} />
+      <NavBar readyState={readyState} user={user} />
       <ChatContent>
         <ContactsSection>
           <p>Robert</p>

@@ -1,4 +1,4 @@
-import { BaseMessage } from "../../../server/messages/base.message";
+import { BaseMessage } from "./base.message";
 import { MessageTypes } from "../constants/message-types";
 
 export interface AuthMessage {
