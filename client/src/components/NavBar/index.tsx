@@ -7,8 +7,9 @@ import UserCard from "../UserCard";
 interface NavBarProps {
   readyState: ReadyState
   user?: User
+  setIsEditingProfile: (isEditingProfile: boolean) => void
 }
-const NavBar = ({user, readyState}: NavBarProps) => {
+const NavBar = ({setIsEditingProfile, user, readyState}: NavBarProps) => {
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting',
@@ -21,6 +22,9 @@ const NavBar = ({user, readyState}: NavBarProps) => {
   return (
     <NavBarContainer>
       <UserCard user={user} />
+      <EditProfileButton onClick={() => setIsEditingProfile(true)} >
+        Edit profile
+      </EditProfileButton>
       <span>The WebSocket is currently {connectionStatus}</span>
     </NavBarContainer>
   )
@@ -37,4 +41,11 @@ const NavBarContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+`
+
+const EditProfileButton = styled.span`
+  color: ${({ theme }) => theme.colors.darkGreen};
+  &:hover {
+    color: ${({ theme }) => theme.colors.modalDarkGreen};
+  }
 `

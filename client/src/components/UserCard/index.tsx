@@ -9,9 +9,13 @@ interface UserCardProps {
 const UserCard = ({user}: UserCardProps) => {
   return (
     <UserCardContainer>
-      <img src={user?.image ?? undefined} alt={user?.alias ?? ''} />
-      <p>@{user?.alias}</p>
-      <p>{user?.phoneNumber}</p>
+      <div>
+        <img src={user?.image ?? undefined} alt={user?.alias ?? ''} />
+      </div>
+      <div>
+        <p>@{user?.alias}</p>
+        <p>{user?.phoneNumber}</p>
+      </div>
     </UserCardContainer>
   )
 }

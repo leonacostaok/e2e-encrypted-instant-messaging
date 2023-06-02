@@ -9,10 +9,12 @@ import NavBar from "../NavBar";
 import { AuthSuccessMessage } from "../../messages/auth-success.message";
 import { getMessage } from "../../messages/base.message";
 import { User } from "../../entities/User";
+import Modal from "../Modal";
 
 const Chat = () => {
   const { keyPair } = useContext(userProviderContext)
   const [user, setUser] = useState<User>()
+  const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false)
   const [messageHistory, setMessageHistory] = useState<WebSocketEventMap['message'][]>([]);
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(process.env.SERVER_URL ?? 'ws://localhost:9876');
@@ -38,7 +40,7 @@ const Chat = () => {
 
   return (
     <ChatContainer>
-      <NavBar readyState={readyState} user={user} />
+      <NavBar setIsEditingProfile={setIsEditingProfile} readyState={readyState} user={user} />
       <ChatContent>
         <ContactsSection>
           <p>Robert</p>
@@ -56,6 +58,9 @@ const Chat = () => {
           </ul>
         </ChatSection>
       </ChatContent>
+      <Modal isOpen={isEditingProfile} onDismiss={() => setIsEditingProfile(false)}>
+        <p>Robert</p>
+      </Modal>
     </ChatContainer>
   )
 }

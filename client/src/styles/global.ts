@@ -27,6 +27,8 @@ const colors = (darkMode: boolean) => {
   aquamarine: '#e1fff3',
   darkGreen: '#009359',
   lightGreen: '#00ff9a',
+
+  modalDarkGreen: 'rgba(0,147,89,0.4)',
  }
 }
 
