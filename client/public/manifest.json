@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "E2E Instant messaging",
+  "name": "End-to-end encrypted instant messaging platform.",
   "icons": [
     {
       "src": "favicon.ico",

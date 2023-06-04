@@ -10,6 +10,7 @@ import { AuthSuccessMessage } from "../../messages/auth-success.message";
 import { getMessage } from "../../messages/base.message";
 import { User } from "../../entities/User";
 import Modal from "../Modal";
+import EditProfileModal from "../Modal/EditProfileModal";
 
 const Chat = () => {
   const { keyPair } = useContext(userProviderContext)
@@ -58,9 +59,7 @@ const Chat = () => {
           </ul>
         </ChatSection>
       </ChatContent>
-      <Modal isOpen={isEditingProfile} onDismiss={() => setIsEditingProfile(false)}>
-        <p>Robert</p>
-      </Modal>
+      <EditProfileModal isOpen={isEditingProfile} onDismiss={() => setIsEditingProfile(false)} />
     </ChatContainer>
   )
 }

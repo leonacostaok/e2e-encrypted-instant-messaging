@@ -61,6 +61,7 @@
     "jsonwebtoken": "^9.0.0",
     "key-store": "^1.2.0",
     "react-cookie": "^4.1.1",
+    "react-hook-form": "^7.44.3",
     "react-use-websocket": "^4.3.1",
     "serve-handler": "^6.1.5",
     "uuid": "^9.0.0",

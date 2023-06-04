@@ -21,10 +21,12 @@ const NavBar = ({setIsEditingProfile, user, readyState}: NavBarProps) => {
 
   return (
     <NavBarContainer>
-      <UserCard user={user} />
-      <EditProfileButton onClick={() => setIsEditingProfile(true)} >
-        Edit profile
-      </EditProfileButton>
+      <div>
+        <UserCard user={user} />
+        <EditProfileButton onClick={() => setIsEditingProfile(true)} >
+          Edit profile
+        </EditProfileButton>
+      </div>
       <span>The WebSocket is currently {connectionStatus}</span>
     </NavBarContainer>
   )
