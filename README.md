@@ -8,7 +8,6 @@ The code repository is split in 2, client & server. To run follow the instructio
 
 - [Getting Started](#getting-started)
     - [Requirements](#requirements)
-    - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
 
 ## Getting Started

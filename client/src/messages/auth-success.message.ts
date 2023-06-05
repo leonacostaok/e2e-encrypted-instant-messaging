@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { User } from "../entities/User";
 
 export interface AuthSuccessMessage {
   user: User;

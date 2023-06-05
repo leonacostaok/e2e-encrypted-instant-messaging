@@ -9,6 +9,7 @@ import { hashMessage, Message } from './messages/message';
 import { PrismaClient } from '@prisma/client';
 import { generateAuthToken } from './utils/auth.utils';
 import { authSuccessMessage } from './messages/auth-success.message';
+import { WebSocket } from 'ws';
 const express = require('express');
 const ws = require('ws');
 
@@ -34,9 +35,10 @@ server.on('upgrade', (request: any, socket: any, head: any) => {
     wss.emit('connection', socket, request);
   });
 });
-const publicKeyToClient = new Map<string, any>();
+const publicKeyToClient = new Map<string, WebSocket>();
+const clientToPublicKey = new Map<WebSocket, string>();
 
-wss.on('connection', (client: any) => {
+wss.on('connection', (client: WebSocket) => {
   const uniqueID = v4();
   let publicKey: string;
 
@@ -67,6 +69,7 @@ wss.on('connection', (client: any) => {
         if (verificationResult) {
           publicKey = authMessage.publicKey;
           publicKeyToClient.set(publicKey, client);
+          clientToPublicKey.set(client, publicKey);
           prisma.user.findFirst({ where: { publicKey } }).then((user) => {
             const { jwtToken, expTime } = generateAuthToken(uniqueID);
             if (user) {
@@ -121,6 +124,7 @@ wss.on('connection', (client: any) => {
 
   client.on('close', () => {
     publicKeyToClient.delete('publicKey');
+    clientToPublicKey.delete(client);
   });
 
   client.send(JSON.stringify(challengeMessage(challenge)));
@@ -131,9 +135,13 @@ const sendError = (ws: any, message: string, code: number) => {
 };
 
 setInterval(() => {
-  wss.clients.forEach((ws: any) => {
+  wss.clients.forEach((ws: WebSocket) => {
     ws.ping(null, false, (err: any) => {
-      if (err) ws.terminate();
+      if (err) {
+        ws.terminate();
+        publicKeyToClient.delete(clientToPublicKey.get(ws));
+        clientToPublicKey.delete(ws);
+      }
     });
   });
 }, 10000);
