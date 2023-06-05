@@ -16,6 +16,7 @@
     "!**/__tests__/**/*"
   ],
   "scripts": {
+    "start": "ts-node app.ts",
     "clean": "rm -rf build coverage",
     "lint": "../node_modules/.bin/eslint src",
     "lint:fix": "npm run lint -- --fix",
