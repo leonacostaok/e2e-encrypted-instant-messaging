@@ -17,15 +17,12 @@
   ],
   "scripts": {
     "clean": "rm -rf build coverage",
-    "lint": "eslint src",
+    "lint": "../node_modules/.bin/eslint src",
     "lint:fix": "npm run lint -- --fix",
-    "test:unit": "jest",
-    "test:watch": "npm run jest -- --watch",
+    "test:unit": "../node_modules/.bin/jest",
     "test": "npm run lint && npm run test:unit",
-    "build": "tsc",
-    "prepublishOnly": "npm run test && npm run build",
     "prisma:generate": "npx prisma generate --schema=./server/prisma/schema.prisma",
-    "prisma:migrate": "prisma migrate dev --preview-feature --schema=./server/prisma/schema.prisma"
+    "prisma:migrate": "../node_modules/.bin/prisma migrate dev --preview-feature --schema=./server/prisma/schema.prisma"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
