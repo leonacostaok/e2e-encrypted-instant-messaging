@@ -8,6 +8,7 @@ The code repository is split in 2, client & server. To run follow the instructio
 
 - [Getting Started](#getting-started)
     - [Requirements](#requirements)
+    - [Platform design](#platform-design)
 - [Troubleshooting](#troubleshooting)
 
 ## Getting Started
@@ -16,6 +17,9 @@ The code repository is split in 2, client & server. To run follow the instructio
 
 You need node.js (16.x) and yarn installed to run it locally.
 Make sure all the environment variables are set up as per the `env.example` file in each repo separately (server / client).
+
+### Platform Design
+The design file can be found in the following [Figma link](https://www.figma.com/file/ZLQPd5r1rzhCUUn1C5I9Dn/E2E-Encrypted-instant-messaging-platform?type=design&node-id=103-18856&t=vX91JGTsOruV1aRn-0).
 
 #### Server deployment
 ```bash
