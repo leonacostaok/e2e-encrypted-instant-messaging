@@ -1,12 +1,12 @@
-import React, { useRef } from "react";
+import React, { useRef } from 'react'
 import styled from 'styled-components'
-import { useOnClickOutside } from "../../hooks/useOnClickOutside";
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 interface ModalProps {
-  isOpen: boolean;
-  onDismiss: () => void;
-  children: React.ReactNode;
-  title?: string;
+  isOpen: boolean
+  onDismiss: () => void
+  children: React.ReactNode
+  title?: string
 }
 
 const Modal = ({ isOpen, onDismiss, children, title }: ModalProps) => {
@@ -24,8 +24,10 @@ const Modal = ({ isOpen, onDismiss, children, title }: ModalProps) => {
         <ModalBody>{children}</ModalBody>
       </ModalContainer>
     </ModalBackground>
-  ) : <></>
-};
+  ) : (
+    <></>
+  )
+}
 
 export default Modal
 
@@ -35,7 +37,7 @@ const ModalBackground = styled.div`
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: ${({ theme }) => theme.colors.modalDarkGreen};
+  background: ${({ theme }) => theme.modalDarkGreen};
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -48,7 +50,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background: ${({ theme }) => theme.colors.white};
+  background: ${({ theme }) => theme.white};
   padding: 10px;
   border-radius: 10px;
   min-width: 300px;
@@ -58,10 +60,10 @@ const ModalContainer = styled.div`
 const ModalHeader = styled.div<{ isTitle: boolean }>`
   display: flex;
   flex-direction: row;
-  background: ${({ theme }) => theme.colors.aquamarine};
+  background: ${({ theme }) => theme.aquamarine};
   padding: 5px 10px;
   border-radius: 5px;
-  justify-content: ${({ isTitle }) => isTitle ? 'space-between' : 'flex-end'};
+  justify-content: ${({ isTitle }) => (isTitle ? 'space-between' : 'flex-end')};
   align-items: center;
   width: 100%;
   p {
@@ -70,10 +72,10 @@ const ModalHeader = styled.div<{ isTitle: boolean }>`
       font-weight: 700;
     }
   }
-`;
+`
 
 const ModalTitle = styled.div`
-  color: ${({ theme }) => theme.colors.black};
+  color: ${({ theme }) => theme.black};
   font-size: 16px;
   font-weight: 700;
 `
@@ -81,7 +83,7 @@ const ModalTitle = styled.div`
 const ModalBody = styled.div`
   display: flex;
   flex-direction: column;
-  background: ${({ theme }) => theme.colors.aquamarine};
+  background: ${({ theme }) => theme.aquamarine};
   padding: 5px 10px;
   border-radius: 5px;
   gap: 10px;

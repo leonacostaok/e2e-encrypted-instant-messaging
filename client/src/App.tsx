@@ -1,55 +1,46 @@
-import React, { useContext, useState } from "react";
-import styled, { ThemeProvider } from "styled-components";
-import { theme } from "./styles/global";
-import { userProviderContext } from "./providers/UserProvider";
-import Login from "./components/Login";
-import Chat from "./components/Chat";
-import Footer from "./components/Footer";
-
+import * as React from 'react'
+import { useContext, useEffect } from 'react'
+import { Route, Switch, useHistory } from 'react-router-dom'
+import LayoutPrimary from './layout/LayoutPrimary/LayoutPrimary'
+import ChatPage from './pages/ChatPage'
+import LoginPage from './pages/LoginPage'
+import { userProviderContext } from './providers/UserProvider'
+import NotFoundPage from "./pages/NotFoundPage";
+import LayoutWithLogin from "./layout/LayoutWithLogin";
+const RouteWithLayout = ({ component: Component, layout: Layout,rest }: any) => (
+  <Route
+    {...rest}
+    render={(props:any) => (
+      <Layout>
+        <Component {...props} />
+      </Layout>
+    )}
+  />
+)
 function App() {
-  const [darkMode, setDarkMode] = useState(Boolean(localStorage.getItem('darkMode')))
+  //const [darkMode, setDarkMode] = useState(Boolean(localStorage.getItem('darkMode')))
   const { keyPair, isBackupConfirmed } = useContext(userProviderContext)
-
-  const changeTheme = () => {
-    localStorage.setItem('darkMode', darkMode ? 'false' : 'true')
-    setDarkMode(!darkMode)
-  }
-
+  const history = useHistory()
+  // const changeTheme = () => {
+  //   localStorage.setItem('darkMode', darkMode ? 'false' : 'true')
+  //   setDarkMode(!darkMode)
+  // }
+  useEffect(() => {
+    if (keyPair && isBackupConfirmed) {
+      history.push('/login')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyPair, isBackupConfirmed])
   return (
-    <ThemeProvider theme={theme(darkMode)}>
-      <AppContainer>
-        <ScreenContainer>
-          { keyPair && isBackupConfirmed ? <Chat /> : <Login /> }
-        </ScreenContainer>
-        <Footer />
-      </AppContainer>
-    </ThemeProvider>
-  );
+    <React.Fragment>
+      <Switch>
+        <RouteWithLayout layout={LayoutPrimary} path={'/login'} exact component={LoginPage} />
+        <RouteWithLayout layout={LayoutWithLogin} path={'/'} exact component={ChatPage} />
+        <RouteWithLayout layout={LayoutWithLogin} path={'/:alias'} exact component={ChatPage} />
+        <RouteWithLayout layout={LayoutPrimary} path={'*'} exact component={NotFoundPage} />
+      </Switch>
+    </React.Fragment>
+  )
 }
 
-export default App;
-
-const AppContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  background: ${({ theme }) => theme.colors.aquamarine};
-  padding-top: 20px;
-`
-
-const ScreenContainer = styled.div`
-  width: 95%;
-  height: calc(95% - 30px);
-  max-width: 1200px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  gap: 20px;
-  border-radius: 10px;
-  background: ${({ theme }) => theme.colors.white};
-`
+export default App

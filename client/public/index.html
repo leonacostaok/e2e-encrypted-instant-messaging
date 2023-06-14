@@ -24,7 +24,26 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <link rel="preload" href="fonts/ProximaNovaFont.otf" as="font" type="font/otf" crossorigin />
     <title>E2E encrypted instant messaging platform client example</title>
+    <style>
+        @font-face {
+            font-family: 'Proxima Nova';
+            font-style: normal;
+            src: url(%PUBLIC_URL%/fonts/ProximaNovaFont.ttf) format("truetype");
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: Proxima Nova, sans-serif;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

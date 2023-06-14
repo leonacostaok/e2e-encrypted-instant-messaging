@@ -1,0 +1,68 @@
+export type FontFamily = string
+export interface FontFamilies {
+  fontProximaNova: FontFamily
+}
+//fontSize
+export type FontSize = string
+export interface FontSizes {
+  fontSizeText1: FontSize
+  fontSizeText2: FontSize
+  fontSizeText3: FontSize
+  fontSizeText4: FontSize
+  fontSizeText5: FontSize
+
+  fontSizeHeading1: FontSize
+  fontSizeTitle1: FontSize
+  fontSizeBody1: FontSize
+}
+
+//colors
+export type Color = string
+export interface Colors {
+  darkMode: boolean
+
+  // base
+  white: Color
+  black: Color
+
+  // colors
+  aquamarine: Color
+  darkGreen: Color
+  lightGreen: Color
+
+  modalDarkGreen: Color
+  mainColor:Color
+  mainLight:Color
+  mainDark:Color
+  mainLightTheme:Color
+  //colors elements
+  mainEle:Color
+  secondaryEle:Color
+  tertiaryEle:Color
+  tertiaryEleLight:Color
+  tertiaryEleDark:Color
+  disabledEle:Color
+  disabledEleLight:Color
+
+  //colors text
+  mainText:Color
+  secondaryText:Color
+  caption:Color
+  mainTextDark:Color
+
+  //background Color
+  mainBg:Color
+  secondaryBg:Color
+  incomingBg:Color
+  outgoingBg:Color
+
+  dropdownBg:Color
+  inputBg:Color
+
+  //color action
+  divider:Color
+  error:Color
+  success:Color
+  highlight:Color
+  system:Color
+}
