@@ -1,7 +1,7 @@
 import styled from "styled-components";
 const TextGeneral = styled.p`
   font-family: ${({theme}) => theme.fontProximaNova};
-  color: ${({theme}) => theme.mainTextDark};
+  color: ${({theme}) => theme.mainTextLight};
   font-style: normal;
   font-weight: 400;
   margin: 0;
@@ -22,6 +22,11 @@ export const TextMedium = styled(TextGeneral)`
 export const TextSmall = styled(TextGeneral)`
   font-size: ${({theme}) => theme.fontSizeText3};
   line-height: 1.428;
+`
+// [14,16]
+export const TextSmall2 = styled(TextGeneral)`
+  font-size: ${({theme}) => theme.fontSizeText3};
+  line-height: 1.1428;
 `
 //[14,20]
 export const LabelLarge = styled(TextGeneral)`
@@ -50,4 +55,11 @@ export const Title1 = styled(TextGeneral)`
 //[17,auto]
 export const TextBody = styled(TextGeneral)`
   font-size: ${({theme}) => theme.fontSizeBody1};
+`
+export const ErrorText = styled(TextGeneral)`
+  color: ${({theme}) => theme.error};
+  font-size: ${({theme}) => theme.fontSizeText4};
+  line-height: 1.333;
+  margin-top: 4px;
+  font-weight: 600;
 `

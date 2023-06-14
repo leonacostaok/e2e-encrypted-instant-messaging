@@ -24,6 +24,7 @@ const colors = (darkMode: boolean): Colors => {
     //colors elements
     mainEle: darkMode ? '#74A1FD' : '#FFAA66',
     secondaryEle: darkMode ? '#FFFFFF' : '#202F3E',
+    secondaryEleLight: '#202F3E',
     tertiaryEle: darkMode ? '#90979F' : '#636D78',
     tertiaryEleLight: '#636D78',
     tertiaryEleDark: '#636D78',
@@ -33,7 +34,7 @@ const colors = (darkMode: boolean): Colors => {
     mainText: darkMode ? '#FFFFFF' : '#0B1B0F',
     secondaryText: darkMode ? '#90979F' : '#636D78',
     caption: '#90979F',
-    mainTextDark: '#0B1B0F',
+    mainTextLight: '#0B1B0F',
     mainBg: darkMode ? '#202F3E' : '#FFFFFF',
     secondaryBg: darkMode ? '#131D28' : '#FFFFFF',
     incomingBg: darkMode ? '#E4E6E8' : '#414E5B',

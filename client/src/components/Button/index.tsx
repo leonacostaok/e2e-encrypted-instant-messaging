@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ButtonPrimary = styled.button`
-  color: ${({theme}) => theme.secondaryEle};
+  color: ${({theme}) => theme.secondaryEleLight};
   outline: none;
   box-shadow: none;
   padding: 8px 16px;

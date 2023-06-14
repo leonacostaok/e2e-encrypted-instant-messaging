@@ -38,6 +38,7 @@ export interface Colors {
   //colors elements
   mainEle:Color
   secondaryEle:Color
+  secondaryEleLight:Color
   tertiaryEle:Color
   tertiaryEleLight:Color
   tertiaryEleDark:Color
@@ -48,7 +49,7 @@ export interface Colors {
   mainText:Color
   secondaryText:Color
   caption:Color
-  mainTextDark:Color
+  mainTextLight:Color
 
   //background Color
   mainBg:Color

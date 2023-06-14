@@ -50,7 +50,7 @@ const SelectSingleBox = styled.div`
     }
     &__option{
       padding: 6px 16px;
-      color: ${({theme}) => theme.mainTextDark};
+      color: ${({theme}) => theme.mainTextLight};
       &:active{
         background-color: transparent;
       }
@@ -104,7 +104,7 @@ const SelectSingleBox = styled.div`
       }
     }
     &__option{
-      color: ${({theme}) => theme.mainTextDark};
+      color: ${({theme}) => theme.mainTextLight};
       background-color: transparent;
       font-size: ${({theme}) => theme.fontSizeText3};
       line-height: 1.428;
