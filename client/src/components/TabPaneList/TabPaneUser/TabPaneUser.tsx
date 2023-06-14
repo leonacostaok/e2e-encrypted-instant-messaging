@@ -43,7 +43,7 @@ const TabPaneUser = () => {
       <DividerTab/>
       <FormUser onSubmit={handleSubmit}>
         <FormAvatar>
-          <MediaUpload nameInput={'avatar'} setFieldValue={setFieldValue} />
+          <MediaUpload nameInput={'avatar'} setFieldValue={setFieldValue} initialSrc={values.avatar ?? ''}/>
         </FormAvatar>
         <FormWrap>
           <FormGroup>

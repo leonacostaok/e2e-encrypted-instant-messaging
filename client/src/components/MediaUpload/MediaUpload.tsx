@@ -3,13 +3,13 @@ import styled from 'styled-components/macro'
 import IconUserDefault from '../../assets/icons/icon-user-default.svg'
 interface IMediaUpload {
   nameInput: string;
-  setFieldValue?:  any | undefined
+  setFieldValue?:  any | undefined;
+  initialSrc:string;
 }
 
 const MediaUpload = (props: IMediaUpload) => {
-  const { nameInput,setFieldValue } = props
-  const [srcMedia, setSrcMedia] = useState<string>('')
-
+  const { nameInput,setFieldValue,initialSrc } = props
+  const [srcMedia, setSrcMedia] = useState<string>(initialSrc)
   const handleChangeMedia = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       return
@@ -36,7 +36,7 @@ const MediaUpload = (props: IMediaUpload) => {
           }}
         />
         <AvatarBox>
-          <Avatar src={srcMedia !== '' ? srcMedia : IconUserDefault} alt={'user-default'} />
+          <Avatar src={initialSrc !== '' ? srcMedia : IconUserDefault} alt={'user-default'} />
         </AvatarBox>
         <TextUpload htmlFor={'avatar'}>Upload</TextUpload>
       </AvatarBoxEdit>
