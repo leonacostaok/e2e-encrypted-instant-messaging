@@ -6,13 +6,14 @@ import styled from "styled-components";
 import FormInput from "../../FormInput";
 import {FormLabel,FormGroup} from "../../FormGroup";
 import {ButtonPrimary, ButtonSecondary} from "../../Button";
-import IconUserDefault from '../../../assets/icons/icon-user-default.svg'
 import * as Yup from 'yup'
 import {ErrorText} from "../../Typhography";
+import MediaUpload from "../../MediaUpload";
 const TabPaneUser = () => {
   const formikUser = useFormik({
     enableReinitialize: true,
     initialValues: {
+      avatar:'',
       publicName: '',
       status: '',
       phoneNumber:'',
@@ -35,17 +36,14 @@ const TabPaneUser = () => {
       console.log(values)
     })
   })
-  const {values,handleChange,handleSubmit,handleReset,errors} = formikUser
+  const {values,handleChange,handleSubmit,handleReset,errors,setFieldValue} = formikUser
   return (
     <TabPaneWrapper>
       <HeaderTabPane title={'Profile'}/>
       <DividerTab/>
       <FormUser onSubmit={handleSubmit}>
         <FormAvatar>
-          <AvatarBox>
-            <Avatar src={IconUserDefault} alt={'user-default'} />
-          </AvatarBox>
-          <TextUpload>Upload</TextUpload>
+          <MediaUpload nameInput={'avatar'} setFieldValue={setFieldValue} />
         </FormAvatar>
         <FormWrap>
           <FormGroup>
@@ -127,25 +125,5 @@ const FormCtaGroup = styled.div`
   justify-content: flex-end;
   gap: 10px;
 `
-const AvatarBox = styled.div`
-  width: 56px;
-  height: 56px;
-  position: relative;
-`
-const Avatar = styled.img`
-  position: absolute;
-  border-radius: 50%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  object-fit: cover;
-`
-const TextUpload = styled.label`
-  color: ${({theme}) => theme.mainLightTheme};
-  cursor: pointer;
-  font-size: ${({theme}) => theme.fontSizeText3};
-  line-height: 1.142;
-`
+
 export default TabPaneUser;
