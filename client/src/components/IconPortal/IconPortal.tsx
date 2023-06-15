@@ -10,8 +10,8 @@ const IconPortalWrap = styled.div<{ widthIcon?:string;heightIcon?:string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: ${({widthIcon}) => widthIcon || '36px'};
-  height: ${({heightIcon}) => heightIcon || '36px'};
+  width: ${({widthIcon}) => widthIcon || '24px'};
+  height: ${({heightIcon}) => heightIcon || '24px'};
 `
 const ImageIcon = styled.img`
   display: block;

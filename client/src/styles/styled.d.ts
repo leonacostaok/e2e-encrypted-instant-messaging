@@ -44,10 +44,12 @@ export interface Colors {
   tertiaryEleDark:Color
   disabledEle:Color
   disabledEleLight:Color
+  disabledEleDark:Color
 
   //colors text
   mainText:Color
   secondaryText:Color
+  secondaryTextLight:Color
   caption:Color
   mainTextLight:Color
 
@@ -56,6 +58,7 @@ export interface Colors {
   secondaryBg:Color
   incomingBg:Color
   outgoingBg:Color
+  bgModal:Color
 
   dropdownBg:Color
   inputBg:Color

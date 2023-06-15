@@ -27,12 +27,14 @@ const colors = (darkMode: boolean): Colors => {
     secondaryEleLight: '#202F3E',
     tertiaryEle: darkMode ? '#90979F' : '#636D78',
     tertiaryEleLight: '#636D78',
-    tertiaryEleDark: '#636D78',
+    tertiaryEleDark: '#90979F',
     disabledEle: darkMode ? '#636D78' : '#BCC1C5',
-    disabledEleLight: '#636D78',
+    disabledEleLight: '#BCC1C5',
+    disabledEleDark: '#636D78',
     //colors text
     mainText: darkMode ? '#FFFFFF' : '#0B1B0F',
     secondaryText: darkMode ? '#90979F' : '#636D78',
+    secondaryTextLight: '#636D78',
     caption: '#90979F',
     mainTextLight: '#0B1B0F',
     mainBg: darkMode ? '#202F3E' : '#FFFFFF',
@@ -42,6 +44,7 @@ const colors = (darkMode: boolean): Colors => {
 
     dropdownBg: darkMode ? '#202F3E' : '#FFFFFF',
     inputBg: darkMode ? '#414E5B' : '#F7F7F7',
+    bgModal: '#D9D9D990',
 
     //color action
     divider: darkMode ? '#414E5B' : '#E7EFFF',
@@ -87,6 +90,16 @@ export const theme = (darkMode: boolean): DefaultTheme => {
       display: flex;
       align-items: center;
     `,
+    flexColumnCenter: css`
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    `,
+    font1420: css`
+      font-size: 14px;
+      line-height: 1.428;
+    `
   }
 }
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {

@@ -11,11 +11,11 @@ import { AuthSuccessMessage } from '../../messages/auth-success.message'
 import { getMessage } from '../../messages/base.message'
 import { ChallengeMessage } from '../../messages/challenge.message'
 import { userProviderContext } from '../../providers/UserProvider'
+import NoChat from "../../components/NoChat";
 
 const ChatPage = () => {
   const { keyPair } = useContext(userProviderContext)
   const [user, setUser] = useState<User>()
-  const [isEditingProfile, setIsEditingProfile] = useState<boolean>(false)
   const [messageHistory, setMessageHistory] = useState<WebSocketEventMap['message'][]>([])
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(process.env.SERVER_URL ?? 'ws://localhost:9876')
@@ -43,16 +43,13 @@ const ChatPage = () => {
 
   return (
     <ChatContainer>
-      <NavBar setIsEditingProfile={setIsEditingProfile} readyState={readyState} user={user} />
+      <SectionNoChat>
+        <NoChat />
+      </SectionNoChat>
       <ChatContent>
-        {/*<ContactsSection>*/}
-        {/*  <p>Robert</p>*/}
-        {/*</ContactsSection>*/}
         <ChatSection>
           <h3>Last Message</h3>
           {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
-          <br />
-          <br />
           <h3>Message History</h3>
           <ul>
             {messageHistory.map((message, idx) => (
@@ -61,7 +58,6 @@ const ChatPage = () => {
           </ul>
         </ChatSection>
       </ChatContent>
-      <EditProfileModal isOpen={isEditingProfile} onDismiss={() => setIsEditingProfile(false)} />
     </ChatContainer>
   )
 }
@@ -74,6 +70,7 @@ const ChatContainer = styled.div`
   align-items: flex-start;
   flex-direction: column;
   gap: 20px;
+  height: 100%;
 `
 
 const ChatContent = styled.div`
@@ -85,22 +82,13 @@ const ChatContent = styled.div`
   width: 100%;
 `
 
-// const ContactsSection = styled.div`
-//   width: 300px;
-//   height: calc(90vh - 110px);
-//   border-radius: 10px;
-//   background: ${({ theme }) => theme.aquamarine};
-// `
-
 const ChatSection = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  //width: calc(100% - 300px);
-  //height: calc(90vh - 110px);
   width: 100%;
-    height: 100%;
+  height: 100%;
   border-radius: 10px;
   background: ${({ theme }) => theme.aquamarine};
   padding: 20px;
@@ -114,4 +102,9 @@ const ChatSection = styled.div`
       word-wrap: break-word;
     }
   }
+`
+const SectionNoChat = styled.div`
+  ${({theme}) => theme.flexRowCenter};
+  width: 100%;
+  height: 100%;
 `

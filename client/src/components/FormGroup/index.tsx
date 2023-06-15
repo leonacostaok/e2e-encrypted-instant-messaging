@@ -19,7 +19,7 @@ export const FormInputStyle = styled.input`
   font-size: ${({theme}) => theme.fontSizeText2};
   line-height: 1.5;
   letter-spacing: 0.15px;
-  color: ${({theme}) => theme.mainTextLight};
+  color: ${({theme}) => theme.secondaryTextLight};
 
   ::-webkit-input-placeholder {
     color: ${({theme}) => theme.secondaryText};

@@ -60,7 +60,7 @@ const ToggleSwitchBox = styled.div`
     left: 2px;
     width: 12px;
     height: 12px;
-    background-color: ${({theme}) => theme.disabledEleLight};
+    background-color: ${({theme}) => theme.disabledEleDark};
     border-radius: 20px;
     transition: all 0.3s ease-in;
   }

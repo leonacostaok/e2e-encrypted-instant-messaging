@@ -77,5 +77,6 @@ const TextUpload = styled.label`
   cursor: pointer;
   font-size: ${({theme}) => theme.fontSizeText3};
   line-height: 1.142;
+  font-weight: 700;
 `
 export default MediaUpload
