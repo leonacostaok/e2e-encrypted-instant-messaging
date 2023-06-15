@@ -10,7 +10,6 @@ const TabPaneChat = () => {
   const onClickScreen = (screen:ScreenChatType)=>{
     setScreenName(screen)
   }
-  console.log(screenName,'screenName')
   const renderContentChat = useCallback(() => {
     switch (screenName) {
       case ScreenChatEnum.NEW_CHAT:

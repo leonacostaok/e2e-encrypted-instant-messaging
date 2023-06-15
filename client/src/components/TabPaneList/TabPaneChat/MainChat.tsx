@@ -36,7 +36,7 @@ const MainChat = ({goTo}:PropsTypeMainChat) => {
     setTerm(valueSearch)
   }
   return (
-    <>
+    <MainChatBox>
       <Header>
         <DivFlex>
           <HeaderTabPane title={'Chat'}/>
@@ -69,9 +69,12 @@ const MainChat = ({goTo}:PropsTypeMainChat) => {
           })
         }
       </ListMessage>
-    </>
+    </MainChatBox>
   );
 };
+const MainChatBox = styled.div`
+  height: 100%;
+`
 const Header = styled.div`
   padding-right: 16px;
 `

@@ -9,8 +9,9 @@ import {TextMedium} from "../Typhography";
 interface PropsTypeContactItem{
   type: ChatNewType
   goTo?:() => void;
+  checkBox?:boolean;
 }
-const ContactItem = ({type,goTo}:PropsTypeContactItem) => {
+const ContactItem = ({type,goTo,checkBox=false}:PropsTypeContactItem) => {
   const handleClickContactItem = () => {
     if(type === ChatNewEnum.NEW_GROUP && goTo){
       goTo()
@@ -30,6 +31,14 @@ const ContactItem = ({type,goTo}:PropsTypeContactItem) => {
           type === ChatNewEnum.USER && 'Name'
         }
       </Title>
+      {
+        checkBox &&  <CheckBox>
+          <InputCheck type="checkbox" name={`checkbox-option`} id={'checkbox-option'}/>
+          <LabelOption htmlFor={`checkbox-option`}>
+            <span></span>
+          </LabelOption>
+        </CheckBox>
+      }
     </ContactItemBox>
   );
 };
@@ -55,4 +64,80 @@ const ImageBox = styled.div`
   }
 `
 const Title = styled(TextMedium)``
+const LabelOption = styled.label`
+`
+const CheckBox = styled.div`
+  ${({theme}) => theme.flexRowCenter};
+  margin-left: auto;
+`
+const InputCheck = styled.input`
+  height: 0; 
+  width: 0;
+
+  & + label{
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: color 250ms cubic-bezier(.4,.0,.23,1);
+  }
+  & + label > span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+    background: transparent;
+    border: 2px solid ${({theme}) => theme.secondaryEleLight};
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 250ms cubic-bezier(.4,.0,.23,1);
+  }
+
+  &:checked + label > span{
+    border: 9px solid ${({theme}) => theme.mainLightTheme};
+    animation: shrink-bounce 200ms cubic-bezier(.4,.0,.23,1);
+  }
+  &:checked + label > span::before{
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 3px;
+    border-right: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    transform: rotate(45deg);
+    transform-origin: 0 100%;
+    animation: checkbox-check 125ms 250ms cubic-bezier(.4,.0,.23,1) forwards;
+  }
+
+  @keyframes shrink-bounce{
+    0%{
+      transform: scale(1);
+    }
+    33%{
+      transform: scale(.85);
+    }
+    100%{
+      transform: scale(1);
+    }
+  }
+  @keyframes checkbox-check{
+    0%{
+      width: 0;
+      height: 0;
+      border-color: ${({theme}) => theme.white};
+      transform: translate3d(0,0,0) rotate(45deg);
+    }
+    33%{
+      width: 4px;
+      height: 0;
+      transform: translate3d(0,0,0) rotate(45deg);
+    }
+    100%{
+      width: 4px;
+      height: 9px;
+      border-color: ${({theme}) => theme.white};
+      transform: translate3d(0,-9px,0) rotate(45deg);
+    }
+  }
+`
 export default ContactItem;

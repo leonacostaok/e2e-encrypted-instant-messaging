@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import styled from 'styled-components'
 
-import EditProfileModal from '../../components/Modal/EditProfileModal'
-import NavBar from '../../components/NavBar'
 import { MessageTypes } from '../../constants/message-types'
 import { User } from '../../entities/User'
 import { authMessage } from '../../messages/auth.message'

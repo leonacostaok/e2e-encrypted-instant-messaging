@@ -26,14 +26,14 @@ const NewChat = ({goTo}:PropsTypeNewChat) => {
         <TextContact>Contacts</TextContact>
         <ListUser>
           <ContactItem type={ChatNewEnum.USER} />
-          <ContactItem type={ChatNewEnum.USER} />
-          <ContactItem type={ChatNewEnum.USER} />
         </ListUser>
       </BoxContactUser>
     </NewChatBox>
   );
 };
-const NewChatBox = styled.div``
+const NewChatBox = styled.div`
+  height: 100%;
+`
 const BoxSearch = styled.div`
   padding: 0 16px;
   margin-bottom: 16px;

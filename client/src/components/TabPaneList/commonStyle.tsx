@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-export const TabPaneWrapper = styled.div``
+export const TabPaneWrapper = styled.div`
+  height: 100%;
+`
 export const DividerTab = styled.div`
   height: 1px;
   background-color: ${({theme}) => theme.mainLight};
