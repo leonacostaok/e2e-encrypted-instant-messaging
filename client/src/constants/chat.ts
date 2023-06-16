@@ -14,5 +14,9 @@ export enum ScreenChatEnum{
 }
 export enum ChatNewEnum{
   USER = 'USER',
-  NEW_GROUP = 'NEW_GROUP'
+  GROUP = 'GROUP'
+}
+export enum ChatExpandEnum{
+  MEDIA='MEDIA',
+  SEARCH='SEARCH'
 }

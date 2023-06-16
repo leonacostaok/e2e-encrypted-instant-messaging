@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import HeaderTabPane from "../../HeaderTabPane";
+import HeaderSection from "../../HeaderSection";
 import {ChatType, ScreenChatType} from "../../../types/chat.type";
 import IconPortal from "../../IconPortal";
 import IconChat from "../../../assets/icons/icon-new-chat.svg";
@@ -39,7 +39,7 @@ const MainChat = ({goTo}:PropsTypeMainChat) => {
     <MainChatBox>
       <Header>
         <DivFlex>
-          <HeaderTabPane title={'Chat'}/>
+          <HeaderSection title={'Chat'}/>
           <GroupActions>
             <ItemAction onClick={() => goTo(ScreenChatEnum.NEW_CHAT as ScreenChatType)}>
               <IconPortal srcIcon={IconChat} />

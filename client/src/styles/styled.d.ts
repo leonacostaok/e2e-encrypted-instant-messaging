@@ -14,6 +14,7 @@ export interface FontSizes {
   fontSizeHeading1: FontSize
   fontSizeTitle1: FontSize
   fontSizeBody1: FontSize
+  fontSizeBody2: FontSize
 }
 
 //colors
@@ -57,6 +58,7 @@ export interface Colors {
   mainBg:Color
   secondaryBg:Color
   incomingBg:Color
+  incomingBgLight:Color
   outgoingBg:Color
   bgModal:Color
 

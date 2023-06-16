@@ -1,14 +1,11 @@
 import React from 'react';
 import styled from "styled-components";
 import {ChatNewEnum} from "../../constants/chat";
-import IconPortal from "../IconPortal";
-import IconUserDefault from "../../assets/icons/icon-user-default.svg";
-import IconGroupSecondary from "../../assets/icons/icon-group-secondary.svg";
-import {ChatNewType} from "../../types/chat.type";
-import {TextMedium} from "../Typhography";
+import { ChatType} from "../../types/chat.type";
 import {useCreateGroup} from "../../hooks/useCreateGroup";
+import BoxNameAvatar from "../BoxNameAvatar";
 interface PropsTypeContactItem{
-  type: ChatNewType
+  type: ChatType
   goTo?:() => void;
   checkBox?:boolean;
   id?:number;
@@ -17,7 +14,7 @@ interface PropsTypeContactItem{
 const ContactItem = ({type,goTo,checkBox=false,id=0,dataUser=undefined}:PropsTypeContactItem) => {
   const {updateCountUserFnc} = useCreateGroup()
   const handleClickContactItem = () => {
-    if(type === ChatNewEnum.NEW_GROUP && goTo){
+    if(type === ChatNewEnum.GROUP && goTo){
       goTo()
     }
   }
@@ -28,18 +25,7 @@ const ContactItem = ({type,goTo,checkBox=false,id=0,dataUser=undefined}:PropsTyp
   }
   return (
     <ContactItemBox onClick={handleClickContactItem}>
-      <ImageBox>
-        {type === ChatNewEnum.USER && <IconPortal srcIcon={IconUserDefault} widthIcon={'40px'} heightIcon={'40px'}/>}
-        {type === ChatNewEnum.NEW_GROUP && <IconPortal srcIcon={IconGroupSecondary} widthIcon={'40px'} heightIcon={'40px'}/>}
-      </ImageBox>
-      <Title>
-        {
-          type === ChatNewEnum.NEW_GROUP && 'New Group'
-        }
-        {
-          type === ChatNewEnum.USER && 'Name'
-        }
-      </Title>
+      <BoxNameAvatar type={type} />
       {
         checkBox && dataUser &&  <CheckBox>
           <InputCheck hidden type="checkbox" name={`checkbox-option-${dataUser.alias}`} id={`checkbox-option-${dataUser.alias}`} onChange={(event:React.ChangeEvent<HTMLInputElement>) => handleChange(event)}/>
@@ -61,18 +47,7 @@ const ContactItemBox = styled.div`
     border-top: 1px solid ${({theme}) => theme.mainLight};
   }
 `
-const ImageBox = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 100px;
-  img{
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-  }
-`
-const Title = styled(TextMedium)``
+
 const LabelOption = styled.label`
 `
 const CheckBox = styled.div`

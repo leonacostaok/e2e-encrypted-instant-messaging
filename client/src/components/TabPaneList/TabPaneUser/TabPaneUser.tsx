@@ -1,5 +1,5 @@
 import React from 'react';
-import HeaderTabPane from "../../HeaderTabPane";
+import HeaderSection from "../../HeaderSection";
 import {DividerTab, TabPaneWrapper} from "../commonStyle";
 import {useFormik} from "formik";
 import styled from "styled-components";
@@ -39,7 +39,7 @@ const TabPaneUser = () => {
   const {values,handleChange,handleSubmit,handleReset,errors,setFieldValue} = formikUser
   return (
     <TabPaneWrapper>
-      <HeaderTabPane title={'Profile'}/>
+      <HeaderSection title={'Profile'}/>
       <DividerTab/>
       <FormUser onSubmit={handleSubmit}>
         <FormAvatar>

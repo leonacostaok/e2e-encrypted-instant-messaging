@@ -40,6 +40,7 @@ const colors = (darkMode: boolean): Colors => {
     mainBg: darkMode ? '#202F3E' : '#FFFFFF',
     secondaryBg: darkMode ? '#131D28' : '#FFFFFF',
     incomingBg: darkMode ? '#E4E6E8' : '#414E5B',
+    incomingBgLight: '#E4E6E8',
     outgoingBg: darkMode ? '#3978FC' : '#E7EFFF',
 
     dropdownBg: darkMode ? '#202F3E' : '#FFFFFF',
@@ -72,7 +73,8 @@ function fontSizes(): FontSizes {
 
     fontSizeHeading1: '48px',
     fontSizeTitle1: '32px',
-    fontSizeBody1: '17px'
+    fontSizeBody1: '17px',
+    fontSizeBody2: '18px'
   }
 }
 // ===== end fontSize =====

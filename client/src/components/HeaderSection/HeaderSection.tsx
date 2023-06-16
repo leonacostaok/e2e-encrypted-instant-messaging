@@ -3,12 +3,12 @@ import styled from "styled-components";
 import IconArrowLeft from '../../assets/icons/icon-arrow-left.svg'
 import IconPortal from "../IconPortal";
 import {TextLarge} from "../Typhography";
-interface PropsTypeHeaderTabPane{
+interface PropsTypeHeaderSection{
   back?:boolean
   title:string
   goBack?:() => void
 }
-const HeaderTabPane = ({back = false,title,goBack}:PropsTypeHeaderTabPane) => {
+const HeaderSection = ({back = false,title,goBack}:PropsTypeHeaderSection) => {
   const handleBack = () => {
     if(!goBack){
       return
@@ -16,19 +16,19 @@ const HeaderTabPane = ({back = false,title,goBack}:PropsTypeHeaderTabPane) => {
     goBack()
   }
   return (
-    <HeaderTabPaneWrap>
+    <HeaderSectionWrap>
       {back && <Back onClick={() => handleBack()}>
         <IconPortal srcIcon={IconArrowLeft} widthIcon={'24px'} heightIcon={'24px'} />
       </Back>}
       <TitleTab>{title}</TitleTab>
-    </HeaderTabPaneWrap>
+    </HeaderSectionWrap>
   );
 };
-const HeaderTabPaneWrap = styled.div`
+const HeaderSectionWrap = styled.div`
   padding: 16px;
-  margin-bottom: 8px;
   display: flex;
   align-items: center;
+  height: 64px;
 `
 const Back = styled.div`
   margin-right: 10px;
@@ -37,4 +37,4 @@ const Back = styled.div`
 const TitleTab = styled(TextLarge)`
   text-transform: capitalize;
 `
-export default HeaderTabPane;
+export default HeaderSection;

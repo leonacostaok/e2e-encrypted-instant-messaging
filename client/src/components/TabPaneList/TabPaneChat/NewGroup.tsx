@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
-import HeaderTabPane from "../../HeaderTabPane";
+import HeaderSection from "../../HeaderSection";
 import FormInputSearch from "../../FormInputSearch";
 import ContactItem from "../../ContactItem";
-import {ChatNewEnum, ScreenChatEnum} from "../../../constants/chat";
+import {ChatTypeEnum, ScreenChatEnum} from "../../../constants/chat";
 import {ScreenChatType} from "../../../types/chat.type";
 import {TextSmall} from "../../Typhography";
 import {ButtonSecondary} from '../../Button';
@@ -22,7 +22,7 @@ const NewChat = ({goTo}:PropsTypeNewChat) => {
   const {count} = useCreateGroup()
   return (
     <NewGroupBox>
-      <HeaderTabPane title={'New group'} back={true} goBack={() => {
+      <HeaderSection title={'New group'} back={true} goBack={() => {
         resetCountUserFnc()
         goTo(ScreenChatEnum.DEFAULT)
       }}/>
@@ -37,9 +37,9 @@ const NewChat = ({goTo}:PropsTypeNewChat) => {
             }
             <TextContact>Contacts</TextContact>
             <ListUser>
-              <ContactItem type={ChatNewEnum.USER} checkBox={true} dataUser={{alias: 'user10'}}/>
-              <ContactItem type={ChatNewEnum.USER} checkBox={true} dataUser={{alias: 'user11'}}/>
-              <ContactItem type={ChatNewEnum.USER} checkBox={true} dataUser={{alias: 'user12'}}/>
+              <ContactItem type={ChatTypeEnum.USER} checkBox={true} dataUser={{alias: 'user10'}}/>
+              <ContactItem type={ChatTypeEnum.USER} checkBox={true} dataUser={{alias: 'user11'}}/>
+              <ContactItem type={ChatTypeEnum.USER} checkBox={true} dataUser={{alias: 'user12'}}/>
             </ListUser>
             <CtaNext>
               <ButtonSecondary onClick={() => setCreateGroup(true)}>Next</ButtonSecondary>

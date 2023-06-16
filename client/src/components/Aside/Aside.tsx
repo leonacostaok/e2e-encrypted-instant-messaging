@@ -75,7 +75,8 @@ const AsideWrapper = styled.div`
 `
 const AsideBar = styled.div`
   width: 80px;
-  flex: 0 0 80px
+  flex: 0 0 80px;
+  box-shadow: inset 1px 0 0 ${({theme}) => theme.mainLight};
 `
 const LogoWrap = styled.div`
   width: 100%;

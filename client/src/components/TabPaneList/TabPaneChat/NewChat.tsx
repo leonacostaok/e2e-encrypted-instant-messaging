@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import styled from "styled-components";
-import HeaderTabPane from "../../HeaderTabPane";
+import HeaderSection from "../../HeaderSection";
 import FormInputSearch from "../../FormInputSearch";
 import ContactItem from "../../ContactItem";
-import {ChatNewEnum, ScreenChatEnum} from "../../../constants/chat";
+import {ChatTypeEnum, ScreenChatEnum} from "../../../constants/chat";
 import {ScreenChatType} from "../../../types/chat.type";
 interface PropsTypeNewChat{
   goTo: (screen:ScreenChatType) => void;
@@ -15,17 +15,17 @@ const NewChat = ({goTo}:PropsTypeNewChat) => {
   }
   return (
     <NewChatBox>
-      <HeaderTabPane title={'New chat'} back={true} goBack={() => goTo(ScreenChatEnum.DEFAULT)}/>
+      <HeaderSection title={'New chat'} back={true} goBack={() => goTo(ScreenChatEnum.DEFAULT)}/>
       <BoxSearch>
         <FormInputSearch placeholder={'Search...'} id={'newChat'} name={'newChat'} value={term} onChange={onChange}/>
       </BoxSearch>
       <BoxAddGroup>
-        <ContactItem type={ChatNewEnum.NEW_GROUP} goTo={() =>goTo(ScreenChatEnum.NEW_GROUP)}/>
+        <ContactItem type={ChatTypeEnum.GROUP} goTo={() =>goTo(ScreenChatEnum.NEW_GROUP)}/>
       </BoxAddGroup>
       <BoxContactUser>
         <TextContact>Contacts</TextContact>
         <ListUser>
-          <ContactItem type={ChatNewEnum.USER} />
+          <ContactItem type={ChatTypeEnum.USER} />
         </ListUser>
       </BoxContactUser>
     </NewChatBox>

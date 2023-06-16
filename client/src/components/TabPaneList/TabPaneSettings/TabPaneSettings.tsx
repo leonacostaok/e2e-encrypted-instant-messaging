@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import HeaderTabPane from "../../HeaderTabPane";
+import HeaderSection from "../../HeaderSection";
 import {DividerTab, TabPaneContent, TabPaneWrapper} from "../commonStyle";
 import {TabSettingsEnum} from "../../../constants/tabItem";
 import IconNotification from '../../../assets/icons/icon-notification.svg'
@@ -60,7 +60,7 @@ const TabPaneSettings = () => {
   },[optionSetting])
   return (
     <TabPaneWrapper>
-      <HeaderTabPane title={optionSetting} back={optionSetting !== TabSettingsEnum.SETTINGS} goBack={onBackSetting}/>
+      <HeaderSection title={optionSetting} back={optionSetting !== TabSettingsEnum.SETTINGS} goBack={onBackSetting}/>
       <DividerTab/>
       {
         optionSetting === TabSettingsEnum.SETTINGS ? optionSettings.map(item => {
