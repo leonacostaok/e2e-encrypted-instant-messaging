@@ -6,16 +6,25 @@ import IconUserDefault from "../../assets/icons/icon-user-default.svg";
 import IconGroupSecondary from "../../assets/icons/icon-group-secondary.svg";
 import {ChatNewType} from "../../types/chat.type";
 import {TextMedium} from "../Typhography";
+import {useCreateGroup} from "../../hooks/useCreateGroup";
 interface PropsTypeContactItem{
   type: ChatNewType
   goTo?:() => void;
   checkBox?:boolean;
+  id?:number;
+  dataUser?: any;
 }
-const ContactItem = ({type,goTo,checkBox=false}:PropsTypeContactItem) => {
+const ContactItem = ({type,goTo,checkBox=false,id=0,dataUser=undefined}:PropsTypeContactItem) => {
+  const {updateCountUserFnc} = useCreateGroup()
   const handleClickContactItem = () => {
     if(type === ChatNewEnum.NEW_GROUP && goTo){
       goTo()
     }
+  }
+  const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+    const typeUpdate = isChecked ? 'INCREASE' : 'DECREASE'
+    updateCountUserFnc({type:typeUpdate})
   }
   return (
     <ContactItemBox onClick={handleClickContactItem}>
@@ -32,9 +41,9 @@ const ContactItem = ({type,goTo,checkBox=false}:PropsTypeContactItem) => {
         }
       </Title>
       {
-        checkBox &&  <CheckBox>
-          <InputCheck type="checkbox" name={`checkbox-option`} id={'checkbox-option'}/>
-          <LabelOption htmlFor={`checkbox-option`}>
+        checkBox && dataUser &&  <CheckBox>
+          <InputCheck hidden type="checkbox" name={`checkbox-option-${dataUser.alias}`} id={`checkbox-option-${dataUser.alias}`} onChange={(event:React.ChangeEvent<HTMLInputElement>) => handleChange(event)}/>
+          <LabelOption htmlFor={`checkbox-option-${dataUser.alias}`}>
             <span></span>
           </LabelOption>
         </CheckBox>

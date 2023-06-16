@@ -7,32 +7,46 @@ import {ChatNewEnum, ScreenChatEnum} from "../../../constants/chat";
 import {ScreenChatType} from "../../../types/chat.type";
 import {TextSmall} from "../../Typhography";
 import {ButtonSecondary} from '../../Button';
+import {useCreateGroup} from "../../../hooks/useCreateGroup";
+import FormCreateGroup from "./FormCreateGroup";
 interface PropsTypeNewChat{
   goTo: (screen:ScreenChatType) => void;
 }
 const NewChat = ({goTo}:PropsTypeNewChat) => {
   const [term,setTerm] = useState<string>('')
+  const [createGroup,setCreateGroup] = useState<boolean>(false)
+  const {resetCountUserFnc} = useCreateGroup()
   const onChange = (valueSearch:string) => {
     setTerm(valueSearch)
   }
+  const {count} = useCreateGroup()
   return (
     <NewGroupBox>
-      <HeaderTabPane title={'New group'} back={true} goBack={() => goTo(ScreenChatEnum.DEFAULT)}/>
-      <BoxSearch>
-        <FormInputSearch placeholder={'Search...'} id={'newGroup'} name={'newGroup'} value={term} onChange={onChange}/>
-      </BoxSearch>
-      <BoxContactUser>
-        <TextSelected>3 contact(s) selected</TextSelected>
-        <TextContact>Contacts</TextContact>
-        <ListUser>
-          <ContactItem type={ChatNewEnum.USER} checkBox={true}/>
-          <ContactItem type={ChatNewEnum.USER} checkBox={true} />
-          <ContactItem type={ChatNewEnum.USER} checkBox={true}/>
-        </ListUser>
-        <CtaNext>
-          <ButtonSecondary>Next</ButtonSecondary>
-        </CtaNext>
-      </BoxContactUser>
+      <HeaderTabPane title={'New group'} back={true} goBack={() => {
+        resetCountUserFnc()
+        goTo(ScreenChatEnum.DEFAULT)
+      }}/>
+      {
+        !createGroup ? <>
+          <BoxSearch>
+            <FormInputSearch placeholder={'Search...'} id={'newGroup'} name={'newGroup'} value={term} onChange={onChange}/>
+          </BoxSearch>
+          <BoxContactUser>
+            {
+              count !== 0 &&  <TextSelected>{count} contact(s) selected</TextSelected>
+            }
+            <TextContact>Contacts</TextContact>
+            <ListUser>
+              <ContactItem type={ChatNewEnum.USER} checkBox={true} dataUser={{alias: 'user10'}}/>
+              <ContactItem type={ChatNewEnum.USER} checkBox={true} dataUser={{alias: 'user11'}}/>
+              <ContactItem type={ChatNewEnum.USER} checkBox={true} dataUser={{alias: 'user12'}}/>
+            </ListUser>
+            <CtaNext>
+              <ButtonSecondary onClick={() => setCreateGroup(true)}>Next</ButtonSecondary>
+            </CtaNext>
+          </BoxContactUser>
+        </> : <FormCreateGroup />
+      }
     </NewGroupBox>
   );
 };
