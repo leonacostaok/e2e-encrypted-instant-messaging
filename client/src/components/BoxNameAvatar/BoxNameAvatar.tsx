@@ -19,7 +19,7 @@ const BoxNameAvatar = ({type}:PropsTypeBoxNameAvatar) => {
         </ImageBox>
         <Title>
           {
-            type === ChatTypeEnum.GROUP && 'New Group'
+            type === ChatTypeEnum.GROUP && 'Group'
           }
           {
             type === ChatTypeEnum.USER && 'Name'

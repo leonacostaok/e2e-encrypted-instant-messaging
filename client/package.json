@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-spring/web": "9.6.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/crypto-js": "^4.1.1",
     "@types/hdkey": "^2.0.1",
@@ -23,6 +24,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "4.0.3",
     "react-select": "^5.4.0",
+    "react-use-measure": "^2.1.1",
     "react-use-websocket": "^4.3.1",
     "redux": "^4.2.1",
     "styled-components": "^5.3.11",

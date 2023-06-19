@@ -6,13 +6,12 @@ import IconPortal from "../IconPortal";
 import IconUserDefault from '../../assets/icons/icon-user-default.svg'
 import IconGroupDefault from '../../assets/icons/icon-group-default.svg'
 import IconBell from '../../assets/icons/icon-bell-disabled.svg'
-import {LabelMedium, LabelSmall, TextLarge} from "../Typhography";
+import {LabelMedium, LabelSmall} from "../Typhography";
 import Badge from "../Badge";
 import Menu from "./Menu";
 import {useOnClickOutside} from "../../hooks/useOnClickOutside";
-import ModalChat from "../ModalChat";
-import {ButtonPrimary,ButtonSecondary} from "../Button";
 import {NavLink} from "react-router-dom";
+import ModalDeleteChat from "../ModalChat/ModalDeleteChat";
 interface ChatItemCp{
   type : ChatType
   data?:any;
@@ -36,7 +35,7 @@ const ChatItemCp = ({type,data,isMuted}:ChatItemCp) => {
     setVisible(true)
   },[])
   const handleDeleteMessage = useCallback(() => {
-
+      //update later
   },[])
   const chatItemNode = useRef<HTMLDivElement>()
   useOnClickOutside(chatItemNode, () => setShowMenu(false))
@@ -72,18 +71,7 @@ const ChatItemCp = ({type,data,isMuted}:ChatItemCp) => {
         showMenu && <Menu onShow={onOpen} hideMenu={hideMenu}/>
       }
       {
-        visible && <ModalChat onDismiss={onDismiss} visible={visible}>
-          <ModalChild>
-            <Question>
-              Are you sure you want to delete
-              this chat?
-            </Question>
-            <ModalFooter>
-              <ButtonPrimary onClick={() => onDismiss()}>Cancel</ButtonPrimary>
-              <ButtonSecondary onClick={() => handleDeleteMessage()}>Delete</ButtonSecondary>
-            </ModalFooter>
-          </ModalChild>
-        </ModalChat>
+        visible && <ModalDeleteChat onDismiss={onDismiss} visible={visible} onDelete={handleDeleteMessage} />
       }
     </ChatItemCpBox>
   );
@@ -154,20 +142,5 @@ const BoxMessage = styled.div`
 const Title = styled.div`
   ${({theme}) => theme.flexRowCenterVertical};
   gap: 4px;
-`
-const ModalChild = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  flex: 1;
-`
-const Question = styled(TextLarge)`
-  color: ${({theme}) => theme.mainTextLight};
-`
-const ModalFooter = styled.div`
-  ${({theme}) => theme.flexRowCenterVertical};
-  gap: 8px;
-  justify-content: flex-end;
-  margin-top: auto;
 `
 export default ChatItemCp;

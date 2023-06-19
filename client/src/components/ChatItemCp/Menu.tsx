@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from "styled-components";
-import {BoxShadow} from "../BoxShadow";
+import {BoxShadow,MenuItem,MenuList} from "../BoxShadow";
 interface PropsTypeMenu{
   onShow: () => void;
   hideMenu: () => void;
@@ -27,21 +27,5 @@ const MenuBox = styled(BoxShadow)`
   right: 12px;
   z-index: 10;
   width: 135px;
-`
-const MenuList = styled.ul`
-  list-style: none;
-  padding-left: 0;
-  margin: 8px 0;
-`
-const MenuItem = styled.li`
-  cursor: pointer;
-  ${({theme}) => theme.font1420};
-  letter-spacing: 0.25px;
-  color: ${({theme}) => theme.mainTextLight};
-  padding: 6px 16px;
-  transition: background-color 0.25s ease-in;
-  &:hover{
-    background-color: ${({theme}) => theme.mainLight};
-  }
 `
 export default Menu;

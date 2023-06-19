@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {ChatExpandType} from "../../../types/chat.type";
 import {ChatExpandEnum} from "../../../constants/chat";
 import ExpandMain from "./ExpandMain";
-import ExpandSearch from "./ExpandSearch";
+import ExpandSearch from "../component/ExpandSearch";
 interface PropsTypeExpand{
   onHide: () => void;
 }
@@ -30,12 +30,8 @@ const Expand = ({onHide}:PropsTypeExpand) => {
   );
 };
 const ExpandBox = styled.div`
-  flex: 0 0 320px;
-  max-width: 320px;
+  width: 100%;
   height: 100%;
-  border-style: solid;
-  border-color: ${({theme}) => theme.mainLight};;
-  border-width: 0 1px;
 `
 
 export default Expand;

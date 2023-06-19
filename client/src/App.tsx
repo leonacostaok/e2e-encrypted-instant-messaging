@@ -17,7 +17,7 @@ const RouteWithLayout = ({ component: Component, layout: Layout,rest }: any) => 
     )}
   />
 )
-function App() {
+const App = () => {
   //const [darkMode, setDarkMode] = useState(Boolean(localStorage.getItem('darkMode')))
   const { keyPair, isBackupConfirmed } = useContext(userProviderContext)
   const history = useHistory()
