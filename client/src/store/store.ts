@@ -1,11 +1,13 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {useDispatch, TypedUseSelectorHook, useSelector} from 'react-redux';
 import userGroupReducer from "./userGroupSlice";
+import chatRoomReducer from "./chatRoomSlice";
 //import {setupListeners} from '@reduxjs/toolkit/query/react';
 
 const store = configureStore({
   reducer: {
-    userGroupReducer
+    userGroupReducer,
+    chatRoomReducer
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

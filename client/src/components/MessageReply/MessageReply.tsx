@@ -6,14 +6,14 @@ import IconReply from '../../assets/icons/icon-reply.svg'
 import ImageFile from '../../assets/images/img_file.png'
 import {LabelMedium} from "../Typhography";
 interface PropsTypeMessageReply{
-  onDeleteReply?:() => void
+  onDeleteReply?:(status:boolean) => void
 }
 const MessageReply = ({onDeleteReply}:PropsTypeMessageReply) => {
   const handleDeleteReply = () => {
     if(!onDeleteReply){
       return
     }
-    onDeleteReply()
+    onDeleteReply(false)
   }
   return (
     <MessageReplyBox>

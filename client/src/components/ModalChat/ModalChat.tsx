@@ -1,8 +1,10 @@
 import React, {useRef} from 'react';
 import styled from "styled-components";
 import {useOnClickOutside} from "../../hooks/useOnClickOutside";
-import {Heading1} from "../Typhography";
+import {TextLarge} from "../Typhography";
 import {BoxShadow} from "../BoxShadow";
+import {ReactComponent as IconClear} from "../../assets/icons/icon-exit.svg";
+
 interface PropsTypeModalActionChat{
   title?:string;
   onDismiss:() => void;
@@ -19,6 +21,7 @@ const ModalChat = ({title,onDismiss,visible,children}:PropsTypeModalActionChat) 
           {
             title && <ModalHeader>
               <ModalTitle>{title}</ModalTitle>
+              <IconClear onClick={onDismiss}/>
             </ModalHeader>
           }
           <ModalBody>
@@ -45,12 +48,38 @@ const ModalDialog = styled(BoxShadow)`
 const ModalContent = styled.div`
   min-width: 380px;
   min-height: 180px;
+  max-height: calc(100vh - 100px);
   padding: 24px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: ${({theme}) => theme.white};
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${({theme}) => theme.mainLightTheme};
+    border: 2px solid ${({theme}) => theme.white};
+    height: 20px;
+  }
 `
-const ModalHeader = styled.div``
-const ModalTitle = styled(Heading1)``
+const ModalHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  svg{
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    margin-left: auto;
+  }
+`
+const ModalTitle = styled(TextLarge)``
 const ModalBody = styled.div`
   flex: 1;
   display: flex;

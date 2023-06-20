@@ -25,10 +25,9 @@ const ExpandSearch = ({onChosen}:PropsTypeExpandSearch) => {
       <ResultBox>
         <FormInputSearch placeholder={'Search...'} id={'search-message'} name={'search-message'} value={message} onChange={onChange}/>
         <HistoryMessage>
-          <MessageCp message={'Message in a single line'}/>
-          <MessageCp message={'Single'}/>
-          <MessageCp message={'single line'}/>
-          <MessageCp message={'Message in a single line'} mine={true}/>
+          <MessageCp data={{data:{message:'Message in a single line'},id:10}}/>
+          <MessageCp data={{data:{message:'Single'},id:12}}/>
+          <MessageCp data={{data:{message: 'Message in a single line'},id:14,mine:true}}/>
         </HistoryMessage>
       </ResultBox>
     </ExpandSearchBox>

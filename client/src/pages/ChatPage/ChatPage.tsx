@@ -24,16 +24,64 @@ import ImageMessage from '../../assets/images/img_message_default.png';
 import {ReactComponent as IconChevronDown} from "../../assets/icons/icon-chevron-down.svg";
 import {LabelSmall} from "../../components/Typhography";
 import MessageReply from "../../components/MessageReply";
-
+import MessageForward from "../../components/MessageForward";
+import ModalForward from "../../components/ModalForward";
+const mockMessage = [
+  {
+    id: 1,
+    mine:false,
+    data:{
+      message:'Message in a single line. Message in a single line. Message in a single line. Message in a single line',
+    }
+  },
+  {
+    id: 2,
+    mine:false,
+    data:{
+      message:'Single',
+    }
+  },
+  {
+    id: 3,
+    mine:false,
+    data:{
+      message:'Message in a single line. Message in a single line. Message in a single line. Message in a single line',
+    }
+  },
+  {
+    id: 4,
+    mine:true,
+    data:{
+      message:'Message in a single line',
+    }
+  },
+  {
+    id: 5,
+    wrongMessage:true,
+    mine:true,
+    data:{
+      message:'Message in a single line',
+    }
+  },
+  {
+    id: 6,
+    mine:false,
+    data:{
+      media:ImageMessage,
+    }
+  }
+]
 const ChatPage = () => {
   const { keyPair } = useContext(userProviderContext)
   const [user, setUser] = useState<User>()
   const [messageHistory, setMessageHistory] = useState<WebSocketEventMap['message'][]>([])
   const [expandChat,setExpandChat] = useState<boolean>(false)
   const [expandGroup,setExpandGroup] = useState<boolean>(false)
+  const [visibleForward,setVisibleForward] = useState<boolean>(false)
   const { sendMessage, lastMessage, readyState } = useWebSocket(process.env.SERVER_URL ?? 'ws://localhost:9876')
   const [measureRef, { width }] = useMeasure();
-
+  const [isReply,setIsReply] = useState<boolean>(false);
+  const [isForward,setIsForward] = useState<boolean>(false);
   const styles = useSpring({
     config: config.stiff,
     from: {
@@ -63,6 +111,19 @@ const ChatPage = () => {
   },[])
   const onHideExpandGroup = useCallback(() => {
     setExpandGroup(false)
+  },[])
+
+  const handleStatusReply = (status:boolean) => {
+    setIsReply(status)
+  }
+  const handleStatusForward = (status:boolean) => {
+    setIsForward(status)
+  }
+  const onDismissForward = useCallback(() => {
+    setVisibleForward(false)
+  },[])
+  const onOpenForward = useCallback(() => {
+    setVisibleForward(true)
   },[])
   useEffect(() => {
     if (lastMessage !== null && keyPair) {
@@ -123,20 +184,23 @@ const ChatPage = () => {
               </ul>
             </MessageHistory>
             <HistoryMessage>
-              <MessageCp enableOption={true} message={'Message in a single line <br/>Message in a single line. Message in a single line. Message in a single line'}/>
-              <MessageCp enableOption={true} message={'Single'}/>
-              <MessageCp enableOption={true} message={'Message in a single line. Message in a single line. Message in a single line'}/>
-              <MessageCp enableOption={true} message={'Message in a single line'}/>
-              <MessageCp enableOption={true} message={'Message in a single line'} mine={true}/>
-              <MessageCp enableOption={true} message={'Message in a single line'} mine={true} wrongMessage={true}/>
-              <MessageCp enableOption={true} media={ImageMessage} mine={true}/>
-              <MessageCp enableOption={true} message={'Message in a single line'}/>
-              <MessageCp enableOption={true} message={'Message in a single line'}/>
-
+              {
+                mockMessage.map((item) => {
+                  const {wrongMessage} = item || {wrongMessage: null}
+                  return !wrongMessage ? <MessageCp enableOption={true} data={item} handleStatusReply={handleStatusReply} handleStatusForward={handleStatusForward} isForward={isForward} key={item.id}/>
+                    : <MessageCp enableOption={true} data={item} key={item.id}/>
+                })
+              }
             </HistoryMessage>
           </ChatSection>
         </ChatContent>
-        <MessageReply />
+        {
+          isReply && <MessageReply onDeleteReply={handleStatusReply}/>
+        }
+        {
+          isForward && <MessageForward onDeleteForward={handleStatusForward} onOpenForward={onOpenForward}/>
+        }
+        {/*div contentedit lam input*/}
       </ChatBody>
       {
         expandChat && <animated.div style={{...stylesChat}} className={'div-animate'}>
@@ -151,6 +215,9 @@ const ChatPage = () => {
             <ExpandGroup onHide = {onHideExpandGroup} />
           </SectionExpand>
         </animated.div>
+      }
+      {
+        visibleForward && <ModalForward onDismiss={onDismissForward} visible={visibleForward} />
       }
     </ChatContainer>
   )

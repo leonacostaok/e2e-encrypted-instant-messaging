@@ -9,20 +9,35 @@ import {useOnClickOutside} from "../../hooks/useOnClickOutside";
 import MenuOptionMessage from "../MenuOptionMessage";
 import ModalDeleteChat from "../ModalChat/ModalDeleteChat";
 import MenuWrongMessage from "../MenuWrongMessage";
+import {InputCheckBox, LabelCheckBox,CheckBox} from "../FormGroup";
+import {useChatRoom} from "../../hooks/useChatRoom";
+import {useCopyToClipboard} from "../../hooks/useCopyToClipboard";
 interface PropsTypeMessageCp{
-  message?:string;
-  mine?:boolean;
+  data:{
+    id: number | string;
+    mine?:boolean;
+    wrongMessage?:boolean;
+    data?:{
+      message?:string| undefined;
+      media?:string | undefined;
+    } | null;
+  };
   enableOption?:boolean | undefined;
-  media?:string;
-  wrongMessage?:boolean;
+  handleStatusReply?:(status:boolean) => void;
+  handleStatusForward?:(status:boolean) => void;
+  isForward?:boolean
 }
-const MessageCp = ({message,mine=false,enableOption,media,wrongMessage=false}:PropsTypeMessageCp) => {
+const MessageCp = ({data,enableOption,handleStatusReply,handleStatusForward,isForward =false}:PropsTypeMessageCp) => {
+  const {id,mine,wrongMessage} = data
   const detailBoxNode = useRef<any>(null)
   const [showOptionMess,setShowOptionMess] = useState<boolean>(false);
   const [popupDelete,setPopupDelete] = useState<boolean>(false);
   const [menuWrong,setMenuWrong] = useState<boolean>(false);
+  const refLabel = useRef<any>(null)
+  const [,copy] = useCopyToClipboard()
+  const {updateContentForwardFnc} = useChatRoom()
   const handleRightClick = (e:React.MouseEvent<HTMLDivElement>) => {
-    if(!enableOption){
+    if(!enableOption || isForward){
       return
     }
     e.preventDefault()
@@ -33,10 +48,6 @@ const MessageCp = ({message,mine=false,enableOption,media,wrongMessage=false}:Pr
       setMenuWrong(true)
     }
   }
-  const hideOptionMess = useCallback(() => {
-    setShowOptionMess(false)
-  },[])
-
   const onDismissPopupDelete = useCallback(() => {
     setPopupDelete(false)
   },[])
@@ -46,41 +57,77 @@ const MessageCp = ({message,mine=false,enableOption,media,wrongMessage=false}:Pr
   const onDelete = () => {
     //update later
   }
-  const hideMenuWrong = useCallback(() => {
+  const onReply = () => {
+    if(!handleStatusReply){
+      return
+    }
+    //update later
+    handleStatusReply(true)
+  }
+  const onForward = () => {
+    if(!handleStatusForward){
+      return
+    }
+    handleStatusForward(true)
+  }
+  const onCopy = () => {
+    if(data.data?.message){
+      copy(data.data?.message).then()
+    }else{
+      return
+    }
+  }
+  const hideMenu = useCallback(() => {
     setMenuWrong(false)
+    setShowOptionMess(false)
   },[])
-  useOnClickOutside(detailBoxNode, () => setShowOptionMess(false))
+  const handleCheckForward = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+    const typeUpdate = isChecked ? 'ADD' : 'REMOVE'
+    updateContentForwardFnc({type:typeUpdate,data:data})
+  }
+
+  // hide menu when click outside
+  useOnClickOutside(detailBoxNode, () => hideMenu())
   return (
     <MessageCpWrapper>
       <MessageContent mine={mine}>
         {
-          !mine && <AvatarUser>
+          !mine && !isForward && <AvatarUser>
             <img src={IconUserDefault} alt={'avatar-user'}/>
           </AvatarUser>
+        }
+        {
+          isForward && !wrongMessage && <CheckBoxCs>
+            <InputCheckBox hidden type="checkbox" name={`checkbox-option-${id}`} id={`checkbox-option-${id}`} onChange={(event:React.ChangeEvent<HTMLInputElement>) => handleCheckForward(event)}/>
+            <LabelCheckBox htmlFor={`checkbox-option-${id}`} ref={refLabel}>
+              <span></span>
+            </LabelCheckBox>
+          </CheckBoxCs>
         }
         <Detail>
           {!mine && <Name>Name</Name>}
           <DetailBox ref={detailBoxNode}
                      onContextMenu={(e:React.MouseEvent<HTMLDivElement>) => handleRightClick(e)}>
             {
-              message && <DetailContent
-                dangerouslySetInnerHTML={{__html:`${message}`}}
+              data?.data?.message && <DetailContent
+                dangerouslySetInnerHTML={{__html:`${data?.data?.message}`}}
                 mine={mine}
               />
             }
             {
-              media &&  <DetailMedia
+              data?.data?.media &&  <DetailMedia
                 mine={mine}
               >
-                <img src={media} alt={'img_mess'}/>
+                <img src={data?.data?.media} alt={'img_mess'}/>
               </DetailMedia>
             }
 
             {
-              showOptionMess && <MenuOptionMessage hideMenu={hideOptionMess} onOpenPopupDelete={onOpenPopupDelete}/>
+              showOptionMess && <MenuOptionMessage hideMenu={hideMenu} onOpenPopupDelete={onOpenPopupDelete} onReply={onReply} onForward={onForward} onCopy={onCopy}/>
             }
             {
-              menuWrong && <MenuWrongMessage hideMenu={hideMenuWrong} onOpenPopupDelete={onOpenPopupDelete}/>
+              menuWrong && <MenuWrongMessage hideMenu={hideMenu} onOpenPopupDelete={onOpenPopupDelete}/>
             }
           </DetailBox>
         </Detail>
@@ -176,5 +223,9 @@ const StatusMess = styled.div<{mine:boolean| undefined}>`
     css`
       flex-direction: row-reverse;
     `}
+`
+const CheckBoxCs = styled(CheckBox)`
+  align-self: center;
+  flex-basis: 36px;
 `
 export default MessageCp;

@@ -29,7 +29,7 @@ const MenuOptionBox = styled(BoxShadow)`
   position: absolute;
   top: 20px;
   right: 12px;
-  z-index: 20;
+  z-index: 10;
   width: 135px;
 `
 export default MenuWrongMessage;
