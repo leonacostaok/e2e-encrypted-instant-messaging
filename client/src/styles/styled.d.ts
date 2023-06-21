@@ -60,10 +60,12 @@ export interface Colors {
   incomingBg:Color
   incomingBgLight:Color
   outgoingBg:Color
+  outgoingBgDark:Color
   bgModal:Color
 
   dropdownBg:Color
   inputBg:Color
+  inputBgLight:Color
 
   //color action
   divider:Color

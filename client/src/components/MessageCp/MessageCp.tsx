@@ -25,9 +25,10 @@ interface PropsTypeMessageCp{
   enableOption?:boolean | undefined;
   handleStatusReply?:(status:boolean) => void;
   handleStatusForward?:(status:boolean) => void;
+  handleEditMessage?:(messageEdit:string) => void;
   isForward?:boolean
 }
-const MessageCp = ({data,enableOption,handleStatusReply,handleStatusForward,isForward =false}:PropsTypeMessageCp) => {
+const MessageCp = ({data,enableOption,handleStatusReply,handleStatusForward,handleEditMessage,isForward =false}:PropsTypeMessageCp) => {
   const {id,mine,wrongMessage} = data
   const detailBoxNode = useRef<any>(null)
   const [showOptionMess,setShowOptionMess] = useState<boolean>(false);
@@ -77,6 +78,12 @@ const MessageCp = ({data,enableOption,handleStatusReply,handleStatusForward,isFo
       return
     }
   }
+  const onEdit = () => {
+    if(!data || !data.data || !data.data.message || !handleEditMessage){
+      return
+    }
+    handleEditMessage(data.data.message)
+  }
   const hideMenu = useCallback(() => {
     setMenuWrong(false)
     setShowOptionMess(false)
@@ -124,7 +131,7 @@ const MessageCp = ({data,enableOption,handleStatusReply,handleStatusForward,isFo
             }
 
             {
-              showOptionMess && <MenuOptionMessage hideMenu={hideMenu} onOpenPopupDelete={onOpenPopupDelete} onReply={onReply} onForward={onForward} onCopy={onCopy}/>
+              showOptionMess && <MenuOptionMessage hideMenu={hideMenu} onOpenPopupDelete={onOpenPopupDelete} onReply={onReply} onForward={onForward} onCopy={onCopy} onEdit={onEdit} mine={mine}/>
             }
             {
               menuWrong && <MenuWrongMessage hideMenu={hideMenu} onOpenPopupDelete={onOpenPopupDelete}/>

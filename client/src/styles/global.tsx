@@ -42,9 +42,10 @@ const colors = (darkMode: boolean): Colors => {
     incomingBg: darkMode ? '#E4E6E8' : '#414E5B',
     incomingBgLight: '#E4E6E8',
     outgoingBg: darkMode ? '#3978FC' : '#E7EFFF',
-
+    outgoingBgDark: '#3978FC',
     dropdownBg: darkMode ? '#202F3E' : '#FFFFFF',
     inputBg: darkMode ? '#414E5B' : '#F7F7F7',
+    inputBgLight: '#F7F7F7',
     bgModal: '#D9D9D990',
 
     //color action

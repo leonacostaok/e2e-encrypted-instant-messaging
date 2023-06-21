@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react'
 import useWebSocket from 'react-use-websocket'
 import styled from 'styled-components'
 
@@ -22,10 +22,20 @@ import useMeasure from "react-use-measure";
 import MessageCp from "../../components/MessageCp";
 import ImageMessage from '../../assets/images/img_message_default.png';
 import {ReactComponent as IconChevronDown} from "../../assets/icons/icon-chevron-down.svg";
-import {LabelSmall} from "../../components/Typhography";
+import {LabelSmall, TextSmall} from "../../components/Typhography";
 import MessageReply from "../../components/MessageReply";
 import MessageForward from "../../components/MessageForward";
 import ModalForward from "../../components/ModalForward";
+import IconEmoji from '../../assets/icons/icon-emoji.svg';
+import IconAttachment from '../../assets/icons/icon-attachment.svg';
+import IconVoice from '../../assets/icons/icon-voice.svg';
+import IconDelete from '../../assets/icons/icon-exit.svg';
+import EmojiPicker, {
+  EmojiStyle,
+  EmojiClickData,
+} from "emoji-picker-react";
+import {useOnClickOutside} from "../../hooks/useOnClickOutside";
+import ContentEditable from "react-contenteditable";
 const mockMessage = [
   {
     id: 1,
@@ -82,6 +92,11 @@ const ChatPage = () => {
   const [measureRef, { width }] = useMeasure();
   const [isReply,setIsReply] = useState<boolean>(false);
   const [isForward,setIsForward] = useState<boolean>(false);
+  const [messageEdit,setMessageEdit] = useState<string | undefined>(undefined);
+  const [htmlContent,setHtmlContent] = useState<string>('')
+  const [showEmoji,setShowEmoji] = useState<boolean>(false);
+  const emojiNode = useRef<HTMLDivElement>();
+  useOnClickOutside(emojiNode, () => setShowEmoji(false))
   const styles = useSpring({
     config: config.stiff,
     from: {
@@ -125,6 +140,23 @@ const ChatPage = () => {
   const onOpenForward = useCallback(() => {
     setVisibleForward(true)
   },[])
+  const handleEditMessage = (messageEdit:string) =>{
+    setMessageEdit(messageEdit)
+  }
+  const toggleEmoji = () => {
+    setShowEmoji(!showEmoji)
+  }
+
+  const onClickEmoji = (emojiData: EmojiClickData, event: MouseEvent)=> {
+    const imgHtml =  `<img src='${process.env.REACT_APP_URL_EMOJI}${emojiData.unified}.png' class="emoji-cs"/>`
+    setHtmlContent(prevState => prevState + `${imgHtml}`)
+  }
+  const handleChangeHTML = (evt:any) => {
+    if(!evt){
+      return
+    }
+    setHtmlContent(evt.target.value);
+  };
   useEffect(() => {
     if (lastMessage !== null && keyPair) {
       setMessageHistory((prev) => prev.concat(lastMessage))
@@ -145,7 +177,6 @@ const ChatPage = () => {
       }
     }
   }, [lastMessage, setMessageHistory])
-
   return (
     <ChatContainer>
       <ChatBody>
@@ -187,7 +218,15 @@ const ChatPage = () => {
               {
                 mockMessage.map((item) => {
                   const {wrongMessage} = item || {wrongMessage: null}
-                  return !wrongMessage ? <MessageCp enableOption={true} data={item} handleStatusReply={handleStatusReply} handleStatusForward={handleStatusForward} isForward={isForward} key={item.id}/>
+                  return !wrongMessage ?
+                    <MessageCp key={item.id}
+                       enableOption={true}
+                       data={item}
+                       isForward={isForward}
+                       handleStatusReply={handleStatusReply}
+                       handleStatusForward={handleStatusForward}
+                       handleEditMessage = {handleEditMessage}
+                    />
                     : <MessageCp enableOption={true} data={item} key={item.id}/>
                 })
               }
@@ -200,7 +239,56 @@ const ChatPage = () => {
         {
           isForward && <MessageForward onDeleteForward={handleStatusForward} onOpenForward={onOpenForward}/>
         }
-        {/*div contentedit lam input*/}
+        <ChatFooter>
+          <DivIcon>
+            <IconPortal srcIcon={IconAttachment} />
+          </DivIcon>
+          <BoxInputMessage>
+            {
+              messageEdit && <EditMessage>
+                <MessagePrev>
+                  <TextSmall>Editing</TextSmall>
+                  <MessagePrevDetail>
+                    {messageEdit}
+                  </MessagePrevDetail>
+                </MessagePrev>
+               <DivIcon className={'icon-discard'} onClick={() => setMessageEdit(undefined)}>
+                 <IconPortal srcIcon={IconDelete} />
+               </DivIcon>
+              </EditMessage>
+            }
+            <BoxInputMessageMain>
+              <ContentEditable
+                className="editable"
+                tagName="pre"
+                html={htmlContent} // innerHTML of the editable div
+                onChange={handleChangeHTML} // handle innerHTML change
+              />
+              <div ref={emojiNode as any}>
+                <IconEmojiBox onClick={toggleEmoji}>
+                  <IconPortal srcIcon={IconEmoji} />
+                </IconEmojiBox>
+                {
+                  showEmoji && <EmojiBox>
+                    <EmojiPicker
+                      onEmojiClick={onClickEmoji}
+                      searchDisabled={true}
+                      skinTonesDisabled={true}
+                      previewConfig={{
+                        showPreview:false
+                      }}
+                      emojiStyle={EmojiStyle.NATIVE}
+                      height={300}
+                    />
+                  </EmojiBox>
+                }
+              </div>
+            </BoxInputMessageMain>
+          </BoxInputMessage>
+          <DivIcon>
+            <IconPortal srcIcon={IconVoice} />
+          </DivIcon>
+        </ChatFooter>
       </ChatBody>
       {
         expandChat && <animated.div style={{...stylesChat}} className={'div-animate'}>
@@ -240,6 +328,9 @@ const ChatBody = styled.section`
   flex-direction: column;
   height: calc(100vh - 30px);
   flex: 1;
+  border-style: solid;
+  border-color: ${({theme}) => theme.mainLight};;
+  border-width: 0 1px 0 0;
 `
 
 const ChatContent = styled.div`
@@ -319,9 +410,6 @@ const SectionExpand = styled.section`
   max-width: 320px;
   width: 320px;
   height: 100%;
-  border-style: solid;
-  border-color: ${({theme}) => theme.mainLight};;
-  border-width: 0 1px;
 `
 const NotificationNewMessage = styled.div`
   border-radius: 4px;
@@ -342,4 +430,74 @@ const NotificationNewMessage = styled.div`
       fill: ${({theme}) => theme.white};
     }
   }
+`
+const ChatFooter = styled.div`
+  padding: 10px 12px;
+  width: 100%;
+  display: flex;
+  ${({theme}) => theme.flexRowCenterVertical};
+  gap: 10px;
+`
+const BoxInputMessage = styled.div`
+  flex: 1;
+  padding: 10px 16px;
+  background-color: ${({theme}) => theme.inputBgLight};
+  position: relative;
+  border-radius: 4px;
+  
+`
+const BoxInputMessageMain = styled.div`
+  display: flex;
+  .editable{
+    outline: none;
+    font-size: ${({theme}) => theme.fontSizeText2};
+    line-height: 1.5;
+    color: ${({theme}) => theme.tertiaryEleLight};
+    position: relative;
+    flex:0 0  calc(100% - 24px);
+    max-width: calc(100% - 24px);
+    padding-right: 10px;
+    white-space: break-spaces;
+    margin: 0;
+    .emoji-cs{
+      width: 16px;
+      height: 16px;
+      margin-top: -2px;
+      vertical-align: middle;
+    }
+  }
+`
+const EditMessage = styled.div`
+  display: flex;
+  width: 100%;
+  .icon-discard{
+    flex: 0 0 24px;
+    max-width: 24px;
+  }
+`
+const MessagePrev = styled.div`
+  flex: 0 0 calc(100% - 24px);
+  max-width: calc(100% - 24px);
+  padding-right: 10px;
+  padding-left: 4px;
+  box-shadow: inset 2px 0 0 ${({theme}) => theme.outgoingBgDark}; 
+  & > p:first-of-type{
+    color: ${({theme}) => theme.secondaryEleLight};
+  }
+`
+const MessagePrevDetail = styled.div`
+ 
+  font-size: ${({theme}) => theme.fontSizeText4};
+  line-height: 1.333;
+  color: ${({theme}) => theme.tertiaryEleLight};
+`
+const IconEmojiBox = styled.div`
+  flex: 0 0 24px;
+  max-width: 24px;
+  cursor: pointer;
+`
+const EmojiBox = styled.div`
+  position: absolute;
+  right: 0;
+  top: -300px;
 `

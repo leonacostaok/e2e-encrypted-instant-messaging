@@ -64,7 +64,7 @@ const ModalChild = styled.div`
 const MediaOnly = styled.div`
   ${({theme}) => theme.flexRowCenterVertical};
   gap: 10px;
-  background-color: #f7f7f7;
+  background-color: ${({theme}) => theme.inputBgLight};
   margin-left: -24px;
   margin-right: -24px;
   padding: 20px 24px;
