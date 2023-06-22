@@ -20,3 +20,8 @@ export enum ChatExpandEnum{
   MEDIA='MEDIA',
   SEARCH='SEARCH'
 }
+export const mimeType:string = "audio/webm";
+export enum StatusRecordingEnum{
+  INACTIVE="inactive",
+  RECORDING="recording",
+}

@@ -19,6 +19,8 @@ import Expand from "./Expand";
 import ExpandGroup from "./ExpandGroup";
 import {useSpring, animated, config} from "@react-spring/web";
 import useMeasure from "react-use-measure";
+import {useOnClickOutside} from "../../hooks/useOnClickOutside";
+import ContentEditable from "react-contenteditable";
 import MessageCp from "../../components/MessageCp";
 import ImageMessage from '../../assets/images/img_message_default.png';
 import {ReactComponent as IconChevronDown} from "../../assets/icons/icon-chevron-down.svg";
@@ -28,7 +30,6 @@ import MessageForward from "../../components/MessageForward";
 import ModalForward from "../../components/ModalForward";
 import IconEmoji from '../../assets/icons/icon-emoji.svg';
 import IconAttachment from '../../assets/icons/icon-attachment.svg';
-import IconVoice from '../../assets/icons/icon-voice.svg';
 import IconDelete from '../../assets/icons/icon-exit.svg';
 import {ReactComponent as IconDocument} from '../../assets/icons/icon-document.svg';
 import {ReactComponent as IconMediaUpload} from '../../assets/icons/icon-image-upload.svg';
@@ -36,10 +37,9 @@ import EmojiPicker, {
   EmojiStyle,
   EmojiClickData,
 } from "emoji-picker-react";
-import {useOnClickOutside} from "../../hooks/useOnClickOutside";
-import ContentEditable from "react-contenteditable";
 import ModalSendFile from "../../components/ModalSendFile";
 import ModalSendMedia from "../../components/ModalSendMedia";
+import AudioRecorder from "../../components/AudioRecorder";
 const mockMessage = [
   {
     id: 1,
@@ -237,7 +237,7 @@ const ChatPage = () => {
           break
       }
     }
-  }, [lastMessage, setMessageHistory])
+  }, [lastMessage,keyPair,sendMessage])
   return (
     <ChatContainer>
       <ChatBody>
@@ -380,9 +380,9 @@ const ChatPage = () => {
               </div>
             </BoxInputMessageMain>
           </BoxInputMessage>
-          <DivIcon>
-            <IconPortal srcIcon={IconVoice} />
-          </DivIcon>
+          <BoxRecorder>
+            <AudioRecorder />
+          </BoxRecorder>
         </ChatFooter>
       </ChatBody>
       {
@@ -553,7 +553,7 @@ const BoxInputMessageMain = styled.div`
     outline: none;
     font-size: ${({theme}) => theme.fontSizeText2};
     line-height: 1.5;
-    color: ${({theme}) => theme.tertiaryEleLight};
+    color: ${({theme}) => theme.black};
     position: relative;
     flex:0 0  calc(100% - 24px);
     max-width: calc(100% - 24px);
@@ -631,3 +631,4 @@ const EmojiBox = styled.div`
   right: 0;
   top: -300px;
 `
+const BoxRecorder = styled.div``

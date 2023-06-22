@@ -3,8 +3,6 @@ import ModalChat from "../ModalChat";
 import {ButtonSecondary} from "../Button";
 import styled from "styled-components";
 import ContentEditable from "react-contenteditable";
-import IconPortal from "../IconPortal";
-import IconDocument from '../../assets/icons/icon-document2.svg';
 interface PropsTypeModalSendMedia{
   onDismiss:() => void;
   visible:boolean;
