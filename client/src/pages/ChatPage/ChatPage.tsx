@@ -22,7 +22,7 @@ import useMeasure from "react-use-measure";
 import MessageCp from "../../components/MessageCp";
 import ImageMessage from '../../assets/images/img_message_default.png';
 import {ReactComponent as IconChevronDown} from "../../assets/icons/icon-chevron-down.svg";
-import {LabelSmall, TextSmall} from "../../components/Typhography";
+import {LabelSmall, TextMedium, TextSmall} from "../../components/Typhography";
 import MessageReply from "../../components/MessageReply";
 import MessageForward from "../../components/MessageForward";
 import ModalForward from "../../components/ModalForward";
@@ -30,12 +30,16 @@ import IconEmoji from '../../assets/icons/icon-emoji.svg';
 import IconAttachment from '../../assets/icons/icon-attachment.svg';
 import IconVoice from '../../assets/icons/icon-voice.svg';
 import IconDelete from '../../assets/icons/icon-exit.svg';
+import {ReactComponent as IconDocument} from '../../assets/icons/icon-document.svg';
+import {ReactComponent as IconMediaUpload} from '../../assets/icons/icon-image-upload.svg';
 import EmojiPicker, {
   EmojiStyle,
   EmojiClickData,
 } from "emoji-picker-react";
 import {useOnClickOutside} from "../../hooks/useOnClickOutside";
 import ContentEditable from "react-contenteditable";
+import ModalSendFile from "../../components/ModalSendFile";
+import ModalSendMedia from "../../components/ModalSendMedia";
 const mockMessage = [
   {
     id: 1,
@@ -95,6 +99,11 @@ const ChatPage = () => {
   const [messageEdit,setMessageEdit] = useState<string | undefined>(undefined);
   const [htmlContent,setHtmlContent] = useState<string>('')
   const [showEmoji,setShowEmoji] = useState<boolean>(false);
+  const [menuAttachment,setMenuAttachment] = useState<boolean>(false);
+  const [fileUpload, setFileUpload] = useState<any>(null);
+  const [fileUploadMedia,setFileUploadMedia] = useState<FileList | null>(null);
+  const [isVisibleSendFile,setIsVisibleSendFile] = useState<boolean>(false);
+  const [isVisibleSendMedia,setIsVisibleSendMedia] = useState<boolean>(false);
   const emojiNode = useRef<HTMLDivElement>();
   useOnClickOutside(emojiNode, () => setShowEmoji(false))
   const styles = useSpring({
@@ -157,6 +166,58 @@ const ChatPage = () => {
     }
     setHtmlContent(evt.target.value);
   };
+  const toggleMenuAttachment = () => {
+    setMenuAttachment(!menuAttachment)
+  }
+  const handleFileUpload = (file: any) => {
+    if (file) {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.addEventListener('load', async () => {
+        const fileObj = {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+        }
+        setFileUpload(fileObj)
+      })
+    }
+  }
+  const handleChangeUploadFile = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    if (!event.target.files) {
+      return
+    }
+    const file = event.target.files[0]
+    handleFileUpload(file)
+  }
+  const onDismissSendFile = useCallback(() =>{
+    setFileUpload(null)
+    setIsVisibleSendFile(false)
+  },[])
+  const onDismissSendMedia = useCallback(() =>{
+    setFileUploadMedia(null)
+    setIsVisibleSendMedia(false)
+  },[])
+  const handleChangeUploadMedia = (event:React.ChangeEvent<HTMLInputElement>):void => {
+    if (!event.target.files) {
+      return
+    }
+    setFileUploadMedia(event.target.files)
+  }
+  useEffect(() => {
+    if(!fileUpload){
+      return
+    }
+    setMenuAttachment(false)
+    setIsVisibleSendFile(true)
+  },[fileUpload])
+  useEffect(() => {
+    if(!fileUploadMedia){
+      return
+    }
+    setMenuAttachment(false)
+    setIsVisibleSendMedia(true)
+  },[fileUploadMedia])
   useEffect(() => {
     if (lastMessage !== null && keyPair) {
       setMessageHistory((prev) => prev.concat(lastMessage))
@@ -240,9 +301,43 @@ const ChatPage = () => {
           isForward && <MessageForward onDeleteForward={handleStatusForward} onOpenForward={onOpenForward}/>
         }
         <ChatFooter>
-          <DivIcon>
-            <IconPortal srcIcon={IconAttachment} />
-          </DivIcon>
+          <AttachmentBox>
+            <DivIcon onClick={toggleMenuAttachment}>
+              <IconPortal srcIcon={IconAttachment} />
+            </DivIcon>
+            {
+              menuAttachment && <MenuAttachment>
+                <AttachmentItem>
+                  <LabelAttachment htmlFor={'file_upload'}>
+                    <IconDocument/>
+                    <TextMedium>Document</TextMedium>
+                  </LabelAttachment>
+                  <input
+                    type="file"
+                    id="file_upload"
+                    hidden
+                    name={'file_upload'}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeUploadFile(e)}
+                  />
+                </AttachmentItem>
+                <AttachmentItem>
+                  <LabelAttachment htmlFor={'file_upload_media'}>
+                    <IconMediaUpload/>
+                    <TextMedium>Image</TextMedium>
+                  </LabelAttachment>
+                  <input
+                    type="file"
+                    id="file_upload_media"
+                    accept="image/*"
+                    hidden
+                    name={'file_upload_media'}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeUploadMedia(e)}
+                    multiple={true}
+                  />
+                </AttachmentItem>
+              </MenuAttachment>
+            }
+          </AttachmentBox>
           <BoxInputMessage>
             {
               messageEdit && <EditMessage>
@@ -306,6 +401,12 @@ const ChatPage = () => {
       }
       {
         visibleForward && <ModalForward onDismiss={onDismissForward} visible={visibleForward} />
+      }
+      {
+        isVisibleSendFile && <ModalSendFile onDismiss={onDismissSendFile} visible={isVisibleSendFile} file={fileUpload}/>
+      }
+      {
+        isVisibleSendMedia && <ModalSendMedia onDismiss={onDismissSendMedia} visible={isVisibleSendMedia} file={fileUploadMedia} />
       }
     </ChatContainer>
   )
@@ -464,6 +565,35 @@ const BoxInputMessageMain = styled.div`
       height: 16px;
       margin-top: -2px;
       vertical-align: middle;
+    }
+  }
+`
+const AttachmentBox = styled.div`
+  position: relative;
+`
+const MenuAttachment = styled.div`
+  position: absolute;
+  top: -90px;
+  left: 0;
+  border-radius: 10px;
+  background-color: ${({theme}) => theme.black};
+  z-index: 10;
+`
+const AttachmentItem = styled.div`
+`
+const LabelAttachment = styled.label`
+  cursor: pointer;
+  padding: 8px 10px;
+  ${({theme}) => theme.flexRowCenterVertical};
+  gap: 4px;
+  p{
+    color: ${({theme}) => theme.white};
+  }
+  svg{
+    width: 16px;
+    height: 16px;
+    path{
+      fill: ${({theme}) => theme.white};
     }
   }
 `
