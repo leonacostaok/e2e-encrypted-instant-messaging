@@ -87,8 +87,14 @@ const ChatItemCpBox = styled.div<{isFocus:boolean}>`
     text-decoration: none;
   }
   a.active .chat-item-cp-main{
-    background: ${({theme}) => theme.mainLight};
+    background-color: ${({theme}) => theme.mainLight};
     box-shadow: inset 4px 0 0${({theme}) => theme.mainLightTheme};
+  }
+  .chat-item-cp-main{
+    transition: background-color 0.25s ease-in;
+    &:hover{
+      background-color: ${({theme}) => theme.mainLight};
+    }
   }
 `
 const ChatItemCpMain = styled.div`
