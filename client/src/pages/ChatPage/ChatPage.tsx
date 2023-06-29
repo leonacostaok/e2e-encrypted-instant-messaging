@@ -1,7 +1,7 @@
-import React, {useCallback, useContext, useEffect, useRef, useState} from 'react'
+import * as React from 'react'
+import {useCallback, useContext, useEffect, useRef, useState} from 'react'
 import useWebSocket from 'react-use-websocket'
 import styled from 'styled-components'
-
 import { MessageTypes } from '../../constants/message-types'
 import { User } from '../../entities/User'
 import { authMessage } from '../../messages/auth.message'

@@ -12,6 +12,7 @@ import {TabItemType} from "../../types/tabItem.type";
 import TabPaneSettings from "../TabPaneList/TabPaneSettings";
 import TabPaneUser from "../TabPaneList/TabPaneUser";
 import TabPaneChat from "../TabPaneList/TabPaneChat";
+import ModalLogout from "../ModalLogout";
 
 const tabItemList = [
   {
@@ -29,6 +30,7 @@ const tabItemList = [
 ]
 const Aside = () => {
   const [tabActive,setTabActive] = useState<TabItemType>(TabItemEnum.CHAT)
+  const [visibleLogout,setVisibleLogout] = useState<boolean>(false)
   const renderTabPaneContent = useCallback((tabKey: TabItemType) => {
     switch (tabKey){
       case TabItemEnum.USER:
@@ -42,6 +44,12 @@ const Aside = () => {
   const handleChangeTab= (tabKey:TabItemType) => {
     setTabActive(tabKey)
   }
+  const onOpenLogout = useCallback(() => {
+    setVisibleLogout(true)
+  },[])
+  const onDismiss = useCallback(() => {
+    setVisibleLogout(false)
+  },[])
   return (
     <AsideWrapper>
       <AsideBar>
@@ -59,13 +67,16 @@ const Aside = () => {
             })
           }
         </AsideTabs>
-        <Logout>
+        <Logout onClick={onOpenLogout}>
           <IconPortal srcIcon={IconLogout} heightIcon={'24px'} widthIcon={'24px'} />
         </Logout>
       </AsideBar>
       <AsideTabPaneList>
         {renderTabPaneContent(tabActive)}
       </AsideTabPaneList>
+      {
+        visibleLogout && <ModalLogout onDismiss={onDismiss} visible={visibleLogout} onLogout={onDismiss} />
+      }
     </AsideWrapper>
   );
 };
@@ -90,11 +101,14 @@ const LogoWrap = styled.div`
   }
 `
 const Logout = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${({theme}) => theme.flexRowCenter};
   padding: 16px;
   border-bottom: 1px solid ${({theme}) => theme.mainLight};
+  transition: background-color 0.25s ease-in;
+  cursor: pointer;
+  &:hover{
+    background-color: ${({theme}) => theme.mainLight};
+  }
 `
 const AsideTabs = styled.div`
  
@@ -106,6 +120,10 @@ const TabItem = styled.div<{active:boolean}>`
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid ${({theme}) => theme.mainLight};
+  transition: background-color 0.25s ease-in;
+  &:hover{
+    background-color: ${({theme}) => theme.mainLight};
+  }
   ${({ active }) =>
       active &&
       css`

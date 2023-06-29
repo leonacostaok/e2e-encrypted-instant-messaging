@@ -47,7 +47,7 @@ const colors = (darkMode: boolean): Colors => {
     inputBg: darkMode ? '#414E5B' : '#F7F7F7',
     inputBgLight: '#F7F7F7',
     bgModal: '#D9D9D990',
-
+    mainDark80: '#FF8A2D80',
     //color action
     divider: darkMode ? '#414E5B' : '#E7EFFF',
     error: '#FF766E',

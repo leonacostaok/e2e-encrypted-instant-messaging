@@ -38,6 +38,13 @@ export const FormInputStyle = styled.input`
     font-size: ${({theme}) => theme.fontSizeText2};
     line-height: 1.5;
   }
+  &[type='search'],&[type='text']{
+    &:focus{
+      -webkit-box-shadow: 0 0 2px 2px ${({theme})=> theme.mainDark80};
+      -moz-box-shadow: 0 0 2px 2px ${({theme})=> theme.mainDark80};
+      box-shadow: 0 0 2px 2px ${({theme})=> theme.mainDark80};
+    }
+  }
 `
 
 export const LabelCheckBox = styled.label`

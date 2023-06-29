@@ -62,6 +62,7 @@ export interface Colors {
   outgoingBg:Color
   outgoingBgDark:Color
   bgModal:Color
+  mainDark80: Color
 
   dropdownBg:Color
   inputBg:Color
