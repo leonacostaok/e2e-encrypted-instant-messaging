@@ -87,7 +87,7 @@ const ContactsSection = styled.div`
   width: 300px;
   height: calc(90vh - 110px);
   border-radius: 10px;
-  background: ${({ theme }) => theme.colors.aquamarine};
+  background: ${({ theme }) => theme.aquamarine};
 `
 
 const ChatSection = styled.div`
@@ -98,7 +98,7 @@ const ChatSection = styled.div`
   width: calc(100% - 300px);
   height: calc(90vh - 110px);
   border-radius: 10px;
-  background: ${({ theme }) => theme.colors.aquamarine};
+  background: ${({ theme }) => theme.aquamarine};
   padding: 20px;
   ul {
     height: auto;

@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react'
 import styled from 'styled-components'
-import { User } from "../../entities/User";
+import { User } from '../../entities/User'
 
 interface UserCardProps {
   user?: User
 }
 
-const UserCard = ({user}: UserCardProps) => {
+const UserCard = ({ user }: UserCardProps) => {
   return (
     <UserCardContainer>
       <div>
@@ -26,7 +26,7 @@ const UserCardContainer = styled.div`
   width: 100%;
   height: 30px;
   border-radius: 10px;
-  background: ${({ theme }) => theme.colors.aquamarine};
+  background: ${({ theme }) => theme.aquamarine};
   display: flex;
   flex-direction: row;
   justify-content: center;

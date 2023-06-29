@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import * as React from "react";
+import { useContext, useState } from 'react';
 import styled from 'styled-components'
 import { userProviderContext } from "../../providers/UserProvider";
 
@@ -146,7 +147,7 @@ const LoginWrapper = styled.div`
   gap: 10px;
   height: auto;
   border-radius: 10px;
-  background: ${({ theme }) => theme.colors.aquamarine};
+  background: ${({ theme }) => theme.aquamarine};
   form {
     display: flex;
     flex-direction: column;
@@ -157,9 +158,9 @@ const LoginWrapper = styled.div`
       text-align: center;
       padding: 0 15%;
       span {
-        color: ${({ theme }) => theme.colors.darkGreen};
+        color: ${({ theme }) => theme.darkGreen};
         &:hover {
-          color: ${({ theme }) => theme.colors.lightGreen};
+          color: ${({ theme }) => theme.lightGreen};
         }
       }
     }
