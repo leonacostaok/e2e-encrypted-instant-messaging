@@ -418,9 +418,9 @@ const ChatContainer = styled.div`
   display: flex;
   flex-direction: row;
   height: 100%;
-  .div-animate{
-    overflow: hidden;
-  }
+  //.div-animate{
+  //  overflow: hidden;
+  //}
 `
 const ChatBody = styled.section`
   display: flex;
