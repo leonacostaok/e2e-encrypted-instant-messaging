@@ -1,4 +1,4 @@
-import { ParamSchema, checkSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 import usersService from '../services/user.services'
 import { validate } from '../utils/validation'
 import { ShareTypeEnum } from '../constants/shareTypeEnum'

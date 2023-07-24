@@ -6,6 +6,7 @@ export interface UpdateUserReqBody {
   name?: string
   image?: string
   phoneNumber?: string
+  status?: string
 }
 export type ShareType = 'NONE' | 'CONTACTS' | 'EVERYONE'
 export type PrivacyUserReqBody = PrivacyType

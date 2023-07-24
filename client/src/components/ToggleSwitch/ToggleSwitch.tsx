@@ -1,35 +1,22 @@
 import *as React from 'react';
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {ChangeEvent} from 'react'
 import styled from "styled-components";
 interface PropsTypeToggleSwitch{
-  enable?:boolean | undefined
+  enable:boolean
+  name?:string
+  setFieldValue?:  any;
 }
-const ToggleSwitch = ({enable}:PropsTypeToggleSwitch) => {
-  const refInput = useRef<HTMLInputElement | null>(null)
-  const statusToggle = useMemo(() => {
-    return !!enable
-  },[enable])
-  const [isChecked,setIsChecked] = useState<boolean>(statusToggle)
-  useEffect(() => {
-    if(!refInput || !refInput.current){
-      return
-    }else{
-      const domInput = refInput.current
-      const domLabel = domInput?.nextElementSibling
-      const handleClickLabel = () => {
-        domInput?.click()
-        setIsChecked(domInput?.checked)
-      }
-      domLabel?.addEventListener('click',handleClickLabel)
-      return () => {
-        domLabel?.removeEventListener('click',handleClickLabel)
-      }
+const ToggleSwitch = ({enable,name,setFieldValue}:PropsTypeToggleSwitch) => {
+  const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked
+    if(setFieldValue){
+      setFieldValue(name,checked)
     }
-  },[])
+  }
   return (
     <ToggleSwitchBox>
-      <input type="checkbox" ref={refInput} defaultChecked={isChecked}/>
-      <label>Toggle</label>
+      <input type="checkbox" checked={enable} name={name} id={name} onChange={(e) => handleChange(e)}/>
+      <label htmlFor={name} />
     </ToggleSwitchBox>
   );
 };

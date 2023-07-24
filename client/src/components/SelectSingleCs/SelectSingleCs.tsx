@@ -5,11 +5,17 @@ import Select, {SingleValue} from "react-select";
 import {OptionType} from "../../types/optionSelect.type";
 interface PropsTypeSelectSingleCs{
   options:OptionType[]
+  initialSelected?:OptionType
+  setFieldValue?: any
+  nameField?:string
 }
-const SelectSingleCs = ({options}:PropsTypeSelectSingleCs) => {
-  const [selectedOptions, setSelectedOptions] = useState<SingleValue<OptionType>>(options[0])
+const SelectSingleCs = ({options,initialSelected,setFieldValue,nameField}:PropsTypeSelectSingleCs) => {
+  const [selectedOptions, setSelectedOptions] = useState<SingleValue<OptionType>>(() =>initialSelected ? initialSelected : options[0])
   const handleChangeSelectedOption = (option:SingleValue<OptionType>)=> {
     setSelectedOptions(option)
+    if(setFieldValue){
+      setFieldValue(nameField,option)
+    }
   }
   return (
     <SelectSingleBox>
@@ -17,9 +23,9 @@ const SelectSingleCs = ({options}:PropsTypeSelectSingleCs) => {
         classNamePrefix={'select-cs2-pre'}
         className={'select-cs2'}
         onChange={handleChangeSelectedOption}
-        value={selectedOptions}
+        value={options ? options.find(option => option.value === initialSelected?.value) : selectedOptions}
         isSearchable={false}
-        closeMenuOnSelect={false}
+        closeMenuOnSelect={true}
         hideSelectedOptions={false}
         options={options}
       />

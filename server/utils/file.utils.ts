@@ -35,6 +35,7 @@ export const handleUploadImage = async (req: Request) => {
   })
   return new Promise<File[]>((resolve, reject) => {
     form.parse(req, (err, fields, files) => {
+      console.log(files, 'files')
       if (err) {
         reject({ message: 'Type is invalid', status: HTTP_STATUS_ME.INTERNAL_SERVER_ERROR })
       }

@@ -4,6 +4,22 @@ import HTTP_STATUS_ME from '../constants/httpStatus'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { UpdateUserReqBody } from '../models/requests/User.requests'
 import { ErrorWithStatus } from '../models/Errors'
+export const getUserController = async (req: Request, res: Response) => {
+  const params = req.params
+  try {
+    const responseGetUser = await usersService.getUser(Number(params.id))
+    return res.send({
+      ...responseGetUser
+    })
+  } catch (e: any) {
+    return res.send(
+      new ErrorWithStatus({
+        message: "User isn't exist!",
+        status: HTTP_STATUS_ME.NOT_FOUND
+      })
+    )
+  }
+}
 export const updateInformationUserController = async (
   req: Request<ParamsDictionary, any, UpdateUserReqBody>,
   res: Response
@@ -43,7 +59,7 @@ export const deleteUserController = async (req: Request, res: Response) => {
   }
 }
 
-export const privacyUserController = async (req: Request, res: Response) => {
+export const updatePrivacyUserController = async (req: Request, res: Response) => {
   try {
     await usersService.updatePrivacyUser(req.body)
     return res.send({
@@ -54,6 +70,22 @@ export const privacyUserController = async (req: Request, res: Response) => {
     return res.send(
       new ErrorWithStatus({
         message: "User isn't exist!",
+        status: HTTP_STATUS_ME.NOT_FOUND
+      })
+    )
+  }
+}
+export const privacyController = async (req: Request, res: Response) => {
+  const params = req.params
+  try {
+    const response = await usersService.getPrivacyUser(Number(params.id))
+    return res.send({
+      ...response
+    })
+  } catch (e: any) {
+    return res.send(
+      new ErrorWithStatus({
+        message: 'Not found privacy',
         status: HTTP_STATUS_ME.NOT_FOUND
       })
     )

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import HeaderSection from "../../HeaderSection";
 import {DividerTab, TabPaneWrapper} from "../commonStyle";
-import {useFormik} from "formik";
+import {FormikValues, useFormik} from "formik";
 import styled from "styled-components";
 import FormInput from "../../FormInput";
 import {FormLabel,FormGroup} from "../../FormGroup";
@@ -9,15 +9,20 @@ import {ButtonPrimary, ButtonSecondary} from "../../Button";
 import * as Yup from 'yup'
 import {ErrorText} from "../../Typhography";
 import MediaUpload from "../../MediaUpload";
+import axios from "axios";
+import {UserType} from "../../../types/user.type";
+import HTTP_STATUS_FE from "../../../constants/httpStatus";
+import {BaseURL} from "../../../constants/baseURL";
 const TabPaneUser = () => {
+  const [user,setUser] = useState<UserType | undefined>(undefined)
   const formikUser = useFormik({
     enableReinitialize: true,
     initialValues: {
-      avatar:'',
-      publicName: '',
-      status: '',
-      phoneNumber:'',
-      alias: ''
+      image:user?.image ? user.image : '',
+      name: user?.name ? user.name : '',
+      status: user?.status ? user.status : '',
+      phoneNumber:user?.phoneNumber ? user.phoneNumber : '',
+      alias: user?.alias ? user.alias : ''
     },
     validationSchema:Yup.object().shape({
       phoneNumber: Yup.string()
@@ -32,27 +37,87 @@ const TabPaneUser = () => {
           'Alias should not space',
         )
     }),
-    onSubmit: (values => {
-      console.log(values)
+    onSubmit: ((values:FormikValues) => {
+      const {image,name,status,phoneNumber,alias} = values;
+      if(!user){
+        return
+      }
+      (async () => {
+        try{
+          let linkAvatar = undefined
+          if(image !== ''){
+            // const bodyFormData = new FormData();
+            // bodyFormData.append('image', image);
+            const resultAvatar = await axios.post(`${BaseURL}/medias/upload-image`,{image:image},{
+              headers:{
+                "Content-Type":'multipart/form-data'
+              }
+            })
+            linkAvatar = resultAvatar.data.result[0]
+          }
+          const objFk = linkAvatar ? {
+              name,
+              status,
+              phoneNumber,
+              alias,
+              image:linkAvatar
+            }:{
+            name,
+            status,
+            phoneNumber,
+            alias
+          }
+          for (const [key, value] of Object.entries(objFk)) {
+            if(value === (user as any)[key] || value === ''){
+              delete (objFk as any)[key]
+            }
+          }
+          const res = await axios.patch(`http://localhost:9876/user/update-user`,{
+            id:1,
+            ...objFk,
+          },{
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+          console.log(res,'res')
+        }catch (e) {
+          console.log('Update information error',e)
+        }
+      })()
     })
   })
   const {values,handleChange,handleSubmit,handleReset,errors,setFieldValue} = formikUser
+  useEffect(() => {
+    (async () => {
+      try{
+        const response = await axios.get(`${BaseURL}/user/1`)
+        const data = response.data
+        const {status} = data
+        if(status === HTTP_STATUS_FE.OK){
+          setUser(data.user)
+        }
+      }catch (e:any){
+        console.log('Error')
+      }
+    })()
+  },[])
   return (
     <TabPaneWrapper>
       <HeaderSection title={'Profile'}/>
       <DividerTab/>
       <FormUser onSubmit={handleSubmit}>
         <FormAvatar>
-          <MediaUpload nameInput={'avatar'} setFieldValue={setFieldValue} initialSrc={values.avatar ?? ''}/>
+          <MediaUpload nameInput={'image'} setFieldValue={setFieldValue} initialSrc={values.image ?? ''}/>
         </FormAvatar>
         <FormWrap>
           <FormGroup>
             <FormLabel>Public name</FormLabel>
             <FormInput
               placeholder={'What should we call you?'}
-              id={'publicName'}
-              name={'publicName'}
-              value={values.publicName || ''}
+              id={'name'}
+              name={'name'}
+              value={values.name || ''}
               onChange={handleChange}
             />
           </FormGroup>

@@ -38,7 +38,7 @@ const MediaUpload = (props: IMediaUpload) => {
         <AvatarBox>
           <Avatar src={initialSrc !== '' ? srcMedia : IconUserDefault} alt={'user-default'} />
         </AvatarBox>
-        <TextUpload htmlFor={'avatar'}>Upload</TextUpload>
+        <TextUpload htmlFor={nameInput}>Upload</TextUpload>
       </AvatarBoxEdit>
     </MediaUploadWrapper>
   )
